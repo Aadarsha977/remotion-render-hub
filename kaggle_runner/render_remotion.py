@@ -30,9 +30,9 @@ subprocess.run("apt-get install -y -qq libasound2t64 || apt-get install -y -qq l
 print("\n[Step 2/5] Verifying toolchain...")
 run_cmd("node -v && npm -v && ffmpeg -version | head -n 1")
 
-# 3. Clone Repository
+# 3. Clone Repository into /tmp (so /kaggle/working only contains the final video!)
 repo_url = "https://github.com/Aadarsha977/remotion-render-hub.git"
-project_dir = "/kaggle/working/remotion-project"
+project_dir = "/tmp/remotion-project"
 
 print(f"\n[Step 3/5] Pulling code from {repo_url}...")
 if os.path.exists(project_dir):
