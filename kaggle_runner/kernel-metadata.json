@@ -1,5 +1,5 @@
 {
-  "id": "techidea/remotion-renderer",
+  "id": "techidea/remotion-cloud-video-renderer",
   "title": "Remotion Cloud Video Renderer",
   "code_file": "render_remotion.py",
   "language": "python",

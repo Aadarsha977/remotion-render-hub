@@ -1,5 +1,5 @@
 param (
-    [string]$KernelSlug = "techidea/remotion-renderer",
+    [string]$KernelSlug = "techidea/remotion-cloud-video-renderer",
     [string]$OutputDir = "./dist"
 )
 
