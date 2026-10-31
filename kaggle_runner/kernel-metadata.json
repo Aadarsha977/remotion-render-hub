@@ -1,0 +1,14 @@
+{
+  "id": "techidea/remotion-renderer",
+  "title": "Remotion Cloud Video Renderer",
+  "code_file": "render_remotion.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": "true",
+  "enable_gpu": "false",
+  "enable_tpu": "false",
+  "enable_internet": "true",
+  "dataset_sources": [],
+  "competition_sources": [],
+  "kernel_sources": []
+}
