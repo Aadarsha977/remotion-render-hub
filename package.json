@@ -4,7 +4,10 @@
   "description": "Remotion video authored in Antigravity and rendered on Kaggle",
   "scripts": {
     "start": "remotion studio",
-    "render": "remotion render"
+    "render": "powershell.exe -ExecutionPolicy Bypass -File ./render-cloud.ps1",
+    "cloud:render": "powershell.exe -ExecutionPolicy Bypass -File ./render-cloud.ps1",
+    "cloud:storyboard": "powershell.exe -ExecutionPolicy Bypass -File ./render-cloud.ps1 -StoryboardOnly",
+    "cloud:video": "powershell.exe -ExecutionPolicy Bypass -File ./render-cloud.ps1 -VideoOnly"
   },
   "dependencies": {
     "@remotion/cli": "^4.0.260",

@@ -1,39 +1,53 @@
 param (
+    [switch]$StoryboardOnly,
+    [switch]$VideoOnly,
     [string]$KernelSlug = "techidea/remotion-cloud-video-renderer",
     [string]$OutputDir = "./dist"
 )
 
 $ErrorActionPreference = "Stop"
 
+# Determine Render Mode
+$mode = "all"
+if ($StoryboardOnly) { $mode = "storyboard" }
+elseif ($VideoOnly) { $mode = "video" }
+
 Write-Host "`n=======================================================" -ForegroundColor Cyan
-Write-Host " 🚀 REMOTION KAGGLE CLOUD RENDER PIPELINE" -ForegroundColor Cyan
+Write-Host " 🚀 REMOTION KAGGLE CLOUD ENGINE (GPU ACCELERATED) " -ForegroundColor Cyan
+Write-Host " Target Mode: $($mode.ToUpper())" -ForegroundColor Green
+Write-Host " Accelerator: Kaggle Dual Tesla T4 GPUs" -ForegroundColor Magenta
 Write-Host "=======================================================" -ForegroundColor Cyan
 
-# 1. Push code to GitHub
-Write-Host "`n[Step 1/4] Checking & Pushing code to GitHub..." -ForegroundColor Yellow
+# 1. Update render_config.json
+$configPath = "./render_config.json"
+if (Test-Path $configPath) {
+    $cfg = Get-Content $configPath -Raw | ConvertFrom-Json
+    $cfg.mode = $mode
+    $cfg | ConvertTo-Json -Depth 5 | Set-Content $configPath
+    Write-Host "`n--> Updated render_config.json (mode: $mode)" -ForegroundColor Gray
+}
+
+# 2. Push code to GitHub
+Write-Host "`n[Step 1/4] Syncing project to GitHub..." -ForegroundColor Yellow
 git add .
 $changes = git status --porcelain
 if ($changes) {
-    git commit -m "Auto-sync before cloud render [$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')]"
-    Write-Host "--> Committed changes locally." -ForegroundColor Gray
-} else {
-    Write-Host "--> No local changes to commit." -ForegroundColor Gray
+    git commit -m "Trigger cloud render (mode: $mode) [$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')]"
+    Write-Host "--> Committed local changes." -ForegroundColor Gray
 }
-
-Write-Host "--> Pushing commits to GitHub..." -ForegroundColor Gray
 git push origin main
-Write-Host "✅ Code is live on GitHub!" -ForegroundColor Green
+Write-Host "✅ GitHub synchronized!" -ForegroundColor Green
 
-# 2. Push Kaggle Kernel
-Write-Host "`n[Step 2/4] Triggering Cloud Render on Kaggle..." -ForegroundColor Yellow
+# 3. Push to Kaggle
+Write-Host "`n[Step 2/4] Triggering Cloud Engine on Kaggle..." -ForegroundColor Yellow
 python -m kaggle kernels push -p ./kaggle_runner
-Write-Host "✅ Kernel successfully queued on Kaggle!" -ForegroundColor Green
+Write-Host "✅ Job dispatched to Kaggle GPU cluster!" -ForegroundColor Green
 
-# 3. Poll Status
-Write-Host "`n[Step 3/4] Waiting for Kaggle to render your video..." -ForegroundColor Yellow
-Write-Host "(Your laptop fans stay silent while Kaggle's 4 vCPUs do the work)" -ForegroundColor DarkGray
+# 4. Poll Status
+Write-Host "`n[Step 3/4] Processing in Cloud..." -ForegroundColor Yellow
+Write-Host "(Your laptop fans stay silent while Kaggle GPUs do all the heavy lifting)" -ForegroundColor DarkGray
 
-$maxWaitSeconds = 600 # 10 minutes
+$maxWaitSeconds = 600
 $elapsed = 0
 $done = $false
 
@@ -46,12 +60,11 @@ while (-not $done -and $elapsed -lt $maxWaitSeconds) {
     
     if ($statusRaw -match '"complete"') {
         $done = $true
-        Write-Host "`n🎉 Cloud rendering finished successfully!" -ForegroundColor Green
+        Write-Host "`n🎉 Cloud job finished successfully!" -ForegroundColor Green
     }
     elseif ($statusRaw -match '"error"') {
-        Write-Host "`n❌ Kaggle reported an error during rendering." -ForegroundColor Red
-        Write-Host "Fetching logs..." -ForegroundColor Yellow
-        python -m kaggle kernels output $KernelSlug -p ./dist
+        Write-Host "`n❌ Kaggle reported an error. Fetching logs..." -ForegroundColor Red
+        python -m kaggle kernels output $KernelSlug -p $OutputDir
         exit 1
     }
 }
@@ -61,24 +74,30 @@ if (-not $done) {
     exit 0
 }
 
-# 4. Download Video
-Write-Host "`n[Step 4/4] Downloading your finished video from Kaggle..." -ForegroundColor Yellow
+# 5. Download Output
+Write-Host "`n[Step 4/4] Downloading generated media from Kaggle..." -ForegroundColor Yellow
 if (-not (Test-Path $OutputDir)) {
     New-Item -ItemType Directory -Path $OutputDir | Out-Null
 }
 
 python -m kaggle kernels output $KernelSlug -p $OutputDir
 
-$videoPath = Join-Path $OutputDir "output.mp4"
-if (Test-Path $videoPath) {
-    $videoItem = Get-Item $videoPath
+# Display Results
+$videoFile = Join-Path $OutputDir "output.mp4"
+$storyboardFile = Join-Path $OutputDir "storyboard\storyboard.html"
+
+Write-Host "`n=======================================================" -ForegroundColor Green
+Write-Host " ✅ CLOUD PROCESSING COMPLETED!" -ForegroundColor Green
+
+if (Test-Path $videoFile) {
+    $videoItem = Get-Item $videoFile
     $sizeMb = [math]::Round($videoItem.Length / 1MB, 2)
-    Write-Host "`n=======================================================" -ForegroundColor Green
-    Write-Host " ✅ VIDEO DOWNLOADED SUCCESSFULLY!" -ForegroundColor Green
-    Write-Host " 📁 File: $($videoItem.FullName)" -ForegroundColor White
-    Write-Host " 📦 Size: $sizeMb MB" -ForegroundColor White
-    Write-Host "=======================================================" -ForegroundColor Green
-} else {
-    Write-Host "`nFiles downloaded into $OutputDir:" -ForegroundColor Gray
-    Get-ChildItem $OutputDir
+    Write-Host " 🎬 Video File: $($videoItem.FullName) ($sizeMb MB)" -ForegroundColor White
 }
+
+if (Test-Path $storyboardFile) {
+    Write-Host " 📸 Storyboard Viewer: $storyboardFile" -ForegroundColor White
+    Write-Host "--> Launching Storyboard Viewer in your browser..." -ForegroundColor Yellow
+    Start-Process $storyboardFile
+}
+Write-Host "=======================================================" -ForegroundColor Green
