@@ -58,11 +58,11 @@ while (-not $done -and $elapsed -lt $maxWaitSeconds) {
     $statusRaw = python -m kaggle kernels status $KernelSlug
     Write-Host "[Elapsed: ${elapsed}s] $statusRaw" -ForegroundColor Cyan
     
-    if ($statusRaw -match '"complete"') {
+    if ($statusRaw -match 'complete') {
         $done = $true
         Write-Host "`n🎉 Cloud job finished successfully!" -ForegroundColor Green
     }
-    elseif ($statusRaw -match '"error"') {
+    elseif ($statusRaw -match 'error') {
         Write-Host "`n❌ Kaggle reported an error. Fetching logs..." -ForegroundColor Red
         python -m kaggle kernels output $KernelSlug -p $OutputDir
         exit 1
