@@ -14,9 +14,9 @@ export interface MainCompositionProps {
 }
 
 export const MainComposition: React.FC<MainCompositionProps> = ({
-  theme = "cream",
+  theme = "chocolate",
 }) => {
-  const currentTheme = THEMES[theme] || THEMES.cream;
+  const currentTheme = THEMES[theme] || THEMES.chocolate;
 
   return (
     <AbsoluteFill style={{ backgroundColor: currentTheme.bg }}>

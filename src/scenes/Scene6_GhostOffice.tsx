@@ -72,6 +72,15 @@ export const Scene6_GhostOffice: React.FC<SceneProps> = ({
     extrapolateRight: 'clamp',
   });
 
+  // Continuous Living Ambient Floating Micro-Particles
+  const particles = [
+    { x: 300, y: 220, r: 2.2, speed: 0.04, color: 'rgba(212, 175, 55, 0.4)' },
+    { x: 1600, y: 260, r: 2.0, speed: 0.035, color: 'rgba(239, 68, 68, 0.35)' },
+    { x: 430, y: 820, r: 1.8, speed: 0.045, color: 'rgba(56, 189, 248, 0.3)' },
+    { x: 1480, y: 780, r: 2.5, speed: 0.03, color: 'rgba(212, 175, 55, 0.3)' },
+    { x: 960, y: 140, r: 2.0, speed: 0.05, color: 'rgba(255, 255, 255, 0.2)' },
+  ];
+
   return (
     <CinematicCanvas
       durationInFrames={durationInFrames}
@@ -108,6 +117,25 @@ export const Scene6_GhostOffice: React.FC<SceneProps> = ({
         color={t.gold}
         strokeWidth={4}
       />
+
+      {/* Continuous Living Ambient Floating Micro-Particles */}
+      <AbsoluteFill style={{ pointerEvents: 'none' }}>
+        <svg width="100%" height="100%" style={{ overflow: 'visible' }}>
+          {particles.map((p, idx) => {
+            const dy = Math.sin(frame * p.speed + idx) * 18;
+            const dx = Math.cos(frame * p.speed * 0.8 + idx) * 12;
+            return (
+              <circle
+                key={idx}
+                cx={p.x + dx}
+                cy={p.y + dy}
+                r={p.r}
+                fill={p.color}
+              />
+            );
+          })}
+        </svg>
+      </AbsoluteFill>
 
       {/* Primary Center Layout */}
       <AbsoluteFill

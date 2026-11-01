@@ -1,8 +1,8 @@
 {
-  "composition": "ArchegosCollapse",
+  "composition": "Main",
   "mode": "all",
   "fps": 30,
-  "durationInFrames": 120,
-  "storyboardIntervalFrames": 15,
+  "durationInFrames": 874,
+  "storyboardIntervalFrames": 60,
   "accelerator": "gpu_t4_x2"
 }

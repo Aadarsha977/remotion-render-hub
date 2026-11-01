@@ -43,6 +43,39 @@ export const Scene2_Wipeout: React.FC<SceneProps> = ({
     extrapolateRight: 'clamp',
   });
 
+  // Radial burst lines on -$20B impact at frame 20
+  const burstSpring = spring({
+    frame: frame - 20,
+    fps,
+    config: { damping: 14, stiffness: 120, mass: 0.5 },
+  });
+
+  const burstRadius = interpolate(burstSpring, [0, 1], [60, 180], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+  });
+
+  const burstLineLength = interpolate(burstSpring, [0, 0.4, 1], [0, 26, 6], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+  });
+
+  const burstOpacity = interpolate(burstSpring, [0, 0.2, 1], [0, 0.95, 0], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+  });
+
+  const burstAngles = [0, 45, 90, 135, 180, 225, 270, 315];
+
+  // Continuous Living Ambient Floating Micro-Particles
+  const particles = [
+    { x: 350, y: 220, r: 2.5, speed: 0.04, color: 'rgba(239, 68, 68, 0.4)' },
+    { x: 1550, y: 260, r: 2.2, speed: 0.035, color: 'rgba(245, 158, 11, 0.35)' },
+    { x: 420, y: 840, r: 1.8, speed: 0.045, color: 'rgba(56, 189, 248, 0.3)' },
+    { x: 1480, y: 780, r: 2.8, speed: 0.03, color: 'rgba(239, 68, 68, 0.3)' },
+    { x: 960, y: 150, r: 2.0, speed: 0.05, color: 'rgba(255, 255, 255, 0.2)' },
+  ];
+
   return (
     <CinematicCanvas
       durationInFrames={durationInFrames}
@@ -72,6 +105,25 @@ export const Scene2_Wipeout: React.FC<SceneProps> = ({
         color="#EF4444"
         strokeWidth={3}
       />
+
+      {/* Continuous Living Ambient Floating Micro-Particles */}
+      <AbsoluteFill style={{ pointerEvents: 'none' }}>
+        <svg width="100%" height="100%" style={{ overflow: 'visible' }}>
+          {particles.map((p, idx) => {
+            const dy = Math.sin(frame * p.speed + idx) * 18;
+            const dx = Math.cos(frame * p.speed * 0.8 + idx) * 12;
+            return (
+              <circle
+                key={idx}
+                cx={p.x + dx}
+                cy={p.y + dy}
+                r={p.r}
+                fill={p.color}
+              />
+            );
+          })}
+        </svg>
+      </AbsoluteFill>
 
       {/* Primary Center Layout */}
       <AbsoluteFill
@@ -148,8 +200,41 @@ export const Scene2_Wipeout: React.FC<SceneProps> = ({
               CUMULATIVE CAPITAL WIPEOUT (NET WORTH ERASED)
             </span>
 
-            {/* Live Ticking -$20,000,000,000 Metric */}
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
+            {/* Live Ticking -$20,000,000,000 Metric with Radial Accent Burst Lines */}
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, position: 'relative' }}>
+              <svg
+                style={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '35%',
+                  transform: 'translate(-50%, -50%)',
+                  width: 440,
+                  height: 440,
+                  pointerEvents: 'none',
+                  overflow: 'visible',
+                }}
+              >
+                {burstAngles.map((ang) => {
+                  const rad = (ang * Math.PI) / 180;
+                  const x1 = 220 + Math.cos(rad) * burstRadius;
+                  const y1 = 220 + Math.sin(rad) * burstRadius;
+                  const x2 = 220 + Math.cos(rad) * (burstRadius + burstLineLength);
+                  const y2 = 220 + Math.sin(rad) * (burstRadius + burstLineLength);
+                  return (
+                    <line
+                      key={ang}
+                      x1={x1}
+                      y1={y1}
+                      x2={x2}
+                      y2={y2}
+                      stroke="#EF4444"
+                      strokeWidth={2.5}
+                      strokeLinecap="round"
+                      opacity={burstOpacity}
+                    />
+                  );
+                })}
+              </svg>
               <DynamicCounter
                 startValue={0}
                 endValue={-20000000000}
