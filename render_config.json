@@ -2,7 +2,9 @@
   "composition": "Main",
   "mode": "all",
   "fps": 30,
-  "durationInFrames": 874,
-  "storyboardIntervalFrames": 60,
-  "accelerator": "gpu_t4_x2"
+  "durationInFrames": 150,
+  "storyboardIntervalFrames": 30,
+  "accelerator": "gpu_t4_x2",
+  "imageFormat": "jpeg",
+  "jpegQuality": 85
 }
