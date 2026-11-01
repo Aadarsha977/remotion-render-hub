@@ -1,8 +1,8 @@
 {
-  "composition": "Main",
+  "composition": "StartupFailureStat",
   "mode": "all",
   "fps": 30,
-  "durationInFrames": 874,
-  "storyboardIntervalFrames": 60,
+  "durationInFrames": 120,
+  "storyboardIntervalFrames": 15,
   "accelerator": "gpu_t4_x2"
 }

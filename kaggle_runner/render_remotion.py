@@ -323,6 +323,8 @@ if render_mode in ["all", "video"]:
         f"xvfb-run -a npx remotion render {composition_id} {output_file} "
         f"--concurrency=4 {gl_flag} "
         f"--chromium-options='{chromium_gpu_flags}' "
+        f"--crf=16 "
+        f"--pixel-format=yuv420p "
         f"--log=info"
     )
     run_cmd(render_command, cwd=project_dir)

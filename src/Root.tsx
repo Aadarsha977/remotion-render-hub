@@ -1,12 +1,23 @@
 import React from "react";
 import { Composition, Folder } from "remotion";
 import { MainComposition } from "./MainComposition";
+import { StartupFailureScene } from "./scenes/StartupFailureScene";
 import { TOTAL_DURATION_FRAMES, FPS } from "./data/timestamps";
 import { THEMES } from "./theme/theme";
 
 export const RemotionRoot: React.FC = () => {
   return (
     <>
+      {/* 4-Second High-Retention Startup Failure Metric Scene */}
+      <Composition
+        id="StartupFailureStat"
+        component={StartupFailureScene}
+        durationInFrames={120}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+
       {/* Primary Main Master alias */}
       <Composition
         id="Main"
