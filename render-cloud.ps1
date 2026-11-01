@@ -13,9 +13,9 @@ if ($StoryboardOnly) { $mode = "storyboard" }
 elseif ($VideoOnly) { $mode = "video" }
 
 Write-Host "`n=======================================================" -ForegroundColor Cyan
-Write-Host " 🚀 REMOTION KAGGLE CLOUD ENGINE (CPU ACCELERATED) " -ForegroundColor Cyan
+Write-Host " 🚀 REMOTION KAGGLE CLOUD ENGINE (GPU ACCELERATED) " -ForegroundColor Cyan
 Write-Host " Target Mode: $($mode.ToUpper())" -ForegroundColor Green
-Write-Host " Accelerator: Kaggle 4 vCPUs (30 GB RAM) - Pure CPU Mode" -ForegroundColor Magenta
+Write-Host " Accelerator: Kaggle Dual Tesla T4 GPUs" -ForegroundColor Magenta
 Write-Host "=======================================================" -ForegroundColor Cyan
 
 # 1. Update render_config.json
@@ -41,11 +41,11 @@ Write-Host "✅ GitHub synchronized!" -ForegroundColor Green
 # 3. Push to Kaggle
 Write-Host "`n[Step 2/4] Triggering Cloud Engine on Kaggle..." -ForegroundColor Yellow
 python -m kaggle kernels push -p ./kaggle_runner
-Write-Host "✅ Job dispatched to Kaggle CPU cluster (Instant start)!" -ForegroundColor Green
+Write-Host "✅ Job dispatched to Kaggle GPU cluster!" -ForegroundColor Green
 
 # 4. Poll Status
 Write-Host "`n[Step 3/4] Processing in Cloud..." -ForegroundColor Yellow
-Write-Host "(Your laptop fans stay silent while Kaggle's 4 vCPUs do all the work)" -ForegroundColor DarkGray
+Write-Host "(Your laptop fans stay silent while Kaggle GPUs do all the heavy lifting)" -ForegroundColor DarkGray
 
 $maxWaitSeconds = 600
 $elapsed = 0
