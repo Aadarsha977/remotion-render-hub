@@ -12,20 +12,15 @@ def run_cmd(cmd, cwd=None):
         sys.exit(res.returncode)
 
 print("=" * 65)
-print("🚀 Remotion Cloud Video & Storyboard Engine (GPU Accelerated)")
+print("🚀 Remotion Cloud Video & Storyboard Engine (Pure CPU Optimized)")
 print("=" * 65)
 
-# 0. Check and Log Hardware Accelerator
+# 0. Pure Multi-Core CPU Hardware Profile
 print("\n[Hardware Diagnostics]")
-gpu_check = subprocess.run("nvidia-smi --query-gpu=gpu_name,memory.total --format=csv,noheader", shell=True, capture_output=True, text=True)
-if gpu_check.returncode == 0 and gpu_check.stdout.strip():
-    print("🔥 Dedicated GPU Detected:")
-    for line in gpu_check.stdout.strip().split("\n"):
-        print(f"   -> {line}")
-    gl_flag = "--gl=angle-egl"
-else:
-    print("⚡ Running on multi-core CPU (fallback software rasterizer)")
-    gl_flag = "--gl=swangle"
+print("⚡ Pure Multi-Core CPU Mode: 4 vCPUs + 30GB RAM")
+print("💡 2D Explainer Mode (GPU/TPU disabled for zero queue & instant rendering)")
+gl_flag = "--gl=swangle"
+chromium_flags = "--disable-gpu --disable-dev-shm-usage --no-sandbox"
 
 # 1. Install Node.js 22 LTS, headless Chromium libraries, and FFmpeg
 print("\n[Step 1/5] Installing Node.js 22 and headless libraries...")
@@ -103,7 +98,7 @@ if render_mode in ["all", "storyboard"]:
         still_cmd = (
             f"xvfb-run -a npx remotion still {composition_id} {output_still} "
             f"--frame={kf} {gl_flag} "
-            f"--chromium-options='--disable-dev-shm-usage --no-sandbox'"
+            f"--chromium-options='{chromium_flags}'"
         )
         run_cmd(still_cmd, cwd=project_dir)
         
@@ -253,7 +248,7 @@ if render_mode in ["all", "storyboard"]:
     <div class="title-area">
       <h1>Cloud Storyboard Preview</h1>
       <div class="meta-pills">
-        <span class="pill glow">⚡ Kaggle GPU Accelerated</span>
+        <span class="pill glow">⚡ Kaggle 4 vCPU Multi-Core (30GB RAM)</span>
         <span class="pill">Composition: {composition_id}</span>
         <span class="pill">Total: {duration_frames} frames ({duration_frames / fps:.1f}s @ {fps}fps)</span>
         <span class="pill">{len(keyframes)} Keyframe Stills</span>
@@ -313,7 +308,7 @@ if render_mode in ["all", "video"]:
     render_command = (
         f"xvfb-run -a npx remotion render {composition_id} {output_file} "
         f"--concurrency=4 {gl_flag} "
-        f"--chromium-options='--disable-dev-shm-usage --no-sandbox' "
+        f"--chromium-options='{chromium_flags}' "
         f"--log=info"
     )
     run_cmd(render_command, cwd=project_dir)

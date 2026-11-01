@@ -4,5 +4,5 @@
   "fps": 30,
   "durationInFrames": 874,
   "storyboardIntervalFrames": 60,
-  "accelerator": "gpu_t4_x2"
+  "accelerator": "cpu_4vcpu"
 }
