@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 340" fill="none">
+  <defs>
+    <linearGradient id="zoomBg" x1="0" y1="0" x2="640" y2="340" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#111827" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#030712" stop-opacity="0.98"/>
+    </linearGradient>
+  </defs>
+  <rect x="4" y="4" width="632" height="332" rx="10" fill="url(#zoomBg)" stroke="rgba(255,255,255,0.12)" stroke-width="2"/>
+  <text x="24" y="32" font-family="'SF Pro Display', sans-serif" font-size="13" font-weight="bold" fill="#9CA3AF">PRIME BROKER EMERGENCY CONCLAVE // MARCH 25, 2021</text>
+  <circle cx="600" cy="28" r="6" fill="#EF4444"/>
+  <text x="565" y="32" font-family="ui-monospace, monospace" font-size="10" fill="#EF4444">REC</text>
+
+  <!-- 6 Tiles -->
+  <!-- Row 1 -->
+  <rect x="24" y="50" width="186" height="120" rx="6" fill="#1F2937" stroke="#38BDF8" stroke-width="2"/>
+  <text x="117" y="115" font-family="'SF Pro Display', sans-serif" font-size="14" font-weight="bold" fill="#FFFFFF" text-anchor="middle">CREDIT SUISSE</text>
+  <text x="117" y="135" font-family="ui-monospace, monospace" font-size="9" fill="#38BDF8" text-anchor="middle">"PROPOSING STANDSTILL"</text>
+
+  <rect x="226" y="50" width="186" height="120" rx="6" fill="#1F2937" stroke="rgba(255,255,255,0.1)"/>
+  <text x="319" y="115" font-family="'SF Pro Display', sans-serif" font-size="14" font-weight="bold" fill="#FFFFFF" text-anchor="middle">GOLDMAN SACHS</text>
+  <text x="319" y="135" font-family="ui-monospace, monospace" font-size="9" fill="#9CA3AF" text-anchor="middle">"DELIBERATING..."</text>
+
+  <rect x="428" y="50" width="186" height="120" rx="6" fill="#1F2937" stroke="rgba(255,255,255,0.1)"/>
+  <text x="521" y="115" font-family="'SF Pro Display', sans-serif" font-size="14" font-weight="bold" fill="#FFFFFF" text-anchor="middle">MORGAN STANLEY</text>
+  <text x="521" y="135" font-family="ui-monospace, monospace" font-size="9" fill="#9CA3AF" text-anchor="middle">"INTERNAL REVIEW"</text>
+
+  <!-- Row 2 -->
+  <rect x="24" y="186" width="186" height="120" rx="6" fill="#1F2937" stroke="rgba(255,255,255,0.1)"/>
+  <text x="117" y="250" font-family="'SF Pro Display', sans-serif" font-size="14" font-weight="bold" fill="#FFFFFF" text-anchor="middle">NOMURA</text>
+
+  <rect x="226" y="186" width="186" height="120" rx="6" fill="#1F2937" stroke="rgba(255,255,255,0.1)"/>
+  <text x="319" y="250" font-family="'SF Pro Display', sans-serif" font-size="14" font-weight="bold" fill="#FFFFFF" text-anchor="middle">UBS</text>
+
+  <rect x="428" y="186" width="186" height="120" rx="6" fill="#1F2937" stroke="rgba(255,255,255,0.1)"/>
+  <text x="521" y="250" font-family="'SF Pro Display', sans-serif" font-size="14" font-weight="bold" fill="#FFFFFF" text-anchor="middle">DEUTSCHE BANK</text>
+</svg>

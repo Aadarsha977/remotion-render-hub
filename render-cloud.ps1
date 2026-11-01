@@ -1,4 +1,4 @@
-param (
+﻿param (
     [switch]$StoryboardOnly,
     [switch]$VideoOnly,
     [string]$KernelSlug = "techidea/remotion-cloud-video-renderer",
@@ -13,7 +13,7 @@ if ($StoryboardOnly) { $mode = "storyboard" }
 elseif ($VideoOnly) { $mode = "video" }
 
 Write-Host "`n=======================================================" -ForegroundColor Cyan
-Write-Host " 🚀 REMOTION KAGGLE CLOUD ENGINE (GPU ACCELERATED) " -ForegroundColor Cyan
+Write-Host " [CLOUD] REMOTION KAGGLE CLOUD ENGINE (GPU ACCELERATED) " -ForegroundColor Cyan
 Write-Host " Target Mode: $($mode.ToUpper())" -ForegroundColor Green
 Write-Host " Accelerator: Kaggle Dual Tesla T4 GPUs" -ForegroundColor Magenta
 Write-Host "=======================================================" -ForegroundColor Cyan
@@ -36,12 +36,12 @@ if ($changes) {
     Write-Host "--> Committed local changes." -ForegroundColor Gray
 }
 git push origin main
-Write-Host "✅ GitHub synchronized!" -ForegroundColor Green
+Write-Host "[OK] GitHub synchronized!" -ForegroundColor Green
 
 # 3. Push to Kaggle
 Write-Host "`n[Step 2/4] Triggering Cloud Engine on Kaggle..." -ForegroundColor Yellow
 python -m kaggle kernels push -p ./kaggle_runner
-Write-Host "✅ Job dispatched to Kaggle GPU cluster!" -ForegroundColor Green
+Write-Host "[OK] Job dispatched to Kaggle GPU cluster!" -ForegroundColor Green
 
 # 4. Poll Status
 Write-Host "`n[Step 3/4] Processing in Cloud..." -ForegroundColor Yellow
@@ -60,17 +60,17 @@ while (-not $done -and $elapsed -lt $maxWaitSeconds) {
     
     if ($statusRaw -match 'complete') {
         $done = $true
-        Write-Host "`n🎉 Cloud job finished successfully!" -ForegroundColor Green
+        Write-Host "`n[SUCCESS] Cloud job finished successfully!" -ForegroundColor Green
     }
     elseif ($statusRaw -match 'error') {
-        Write-Host "`n❌ Kaggle reported an error. Fetching logs..." -ForegroundColor Red
+        Write-Host "`n[ERROR] Kaggle reported an error. Fetching logs..." -ForegroundColor Red
         python -m kaggle kernels output $KernelSlug -p $OutputDir
         exit 1
     }
 }
 
 if (-not $done) {
-    Write-Host "`n⚠️ Render is taking longer than expected. Run 'python -m kaggle kernels status $KernelSlug' to check." -ForegroundColor Yellow
+    Write-Host "`n[WARN] Render is taking longer than expected. Run 'python -m kaggle kernels status $KernelSlug' to check." -ForegroundColor Yellow
     exit 0
 }
 
@@ -87,17 +87,17 @@ $videoFile = Join-Path $OutputDir "output.mp4"
 $storyboardFile = Join-Path $OutputDir "storyboard\storyboard.html"
 
 Write-Host "`n=======================================================" -ForegroundColor Green
-Write-Host " ✅ CLOUD PROCESSING COMPLETED!" -ForegroundColor Green
+Write-Host " [OK] CLOUD PROCESSING COMPLETED!" -ForegroundColor Green
 
 if (Test-Path $videoFile) {
     $videoItem = Get-Item $videoFile
     $sizeMb = [math]::Round($videoItem.Length / 1MB, 2)
-    Write-Host " 🎬 Video File: $($videoItem.FullName) ($sizeMb MB)" -ForegroundColor White
+    Write-Host " [VIDEO] Video File: $($videoItem.FullName) ($sizeMb MB)" -ForegroundColor White
 }
 
 if (Test-Path $storyboardFile) {
-    Write-Host " 📸 Storyboard Viewer: $storyboardFile" -ForegroundColor White
+    Write-Host " [STORYBOARD] Storyboard Viewer: $storyboardFile" -ForegroundColor White
     Write-Host "--> Launching Storyboard Viewer in your browser..." -ForegroundColor Yellow
-    Start-Process $storyboardFile
+    try { Start-Process  } catch {}$storyboardFile
 }
 Write-Host "=======================================================" -ForegroundColor Green

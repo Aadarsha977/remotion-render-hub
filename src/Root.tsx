@@ -5,6 +5,9 @@ import { StartupFailureScene } from "./scenes/StartupFailureScene";
 import { ArchegosCollapseScene } from "./scenes/ArchegosCollapseScene";
 import { TOTAL_DURATION_FRAMES, FPS } from "./data/timestamps";
 import { THEMES } from "./theme/theme";
+import { Scene001Master } from "./archegos/Scene001Master";
+import { Scene002Master } from "./archegos/Scene002Master";
+import { Act1MasterSequence } from "./archegos/Act1MasterSequence";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -130,6 +133,37 @@ export const RemotionRoot: React.FC = () => {
           height={1920}
         />
       </Folder>
+
+      {/* ========================================================
+          Archegos 20B Documentary - Act 1 Compositions
+         ======================================================== */}
+      <Composition
+        id="Archegos-Scene001"
+        component={Scene001Master}
+        durationInFrames={874}
+        fps={30}
+        width={1920}
+        height={1080}
+        defaultProps={{ transparentBackground: false }}
+      />
+      <Composition
+        id="Archegos-Scene002"
+        component={Scene002Master}
+        durationInFrames={1081}
+        fps={30}
+        width={1920}
+        height={1080}
+        defaultProps={{ transparentBackground: false }}
+      />
+      <Composition
+        id="Archegos-Act1-Master"
+        component={Act1MasterSequence}
+        durationInFrames={1955}
+        fps={30}
+        width={1920}
+        height={1080}
+        defaultProps={{ transparentBackground: false }}
+      />
     </>
   );
 };

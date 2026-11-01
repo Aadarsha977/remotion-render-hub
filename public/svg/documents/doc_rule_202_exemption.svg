@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 640" fill="none">
+  <defs>
+    <linearGradient id="exemptBg" x1="0" y1="0" x2="480" y2="640" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#181A24" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#0F1118" stop-opacity="0.98"/>
+    </linearGradient>
+  </defs>
+  <rect x="10" y="10" width="460" height="620" rx="8" fill="url(#exemptBg)" stroke="rgba(255, 209, 102, 0.3)" stroke-width="2"/>
+  <text x="240" y="60" font-family="'SF Pro Display', sans-serif" font-size="16" font-weight="800" fill="#FFD166" text-anchor="middle" letter-spacing="0.08em">DODD-FRANK WALL STREET REFORM ACT</text>
+  <text x="240" y="82" font-family="ui-monospace, monospace" font-size="11" font-weight="600" fill="rgba(255,255,255,0.7)" text-anchor="middle">FAMILY OFFICE ADVISERS EXEMPTION // RULE 202(a)(11)(G)</text>
+  
+  <line x1="40" y1="105" x2="440" y2="105" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+  
+  <text x="50" y="140" font-family="ui-monospace, monospace" font-size="12" fill="#FFFFFF">CLIENT REGISTRATION STATUS:</text>
+  <text x="50" y="170" font-family="'SF Pro Display', sans-serif" font-size="28" font-weight="900" fill="#EF4444">ZERO OUTSIDE CLIENTS</text>
+  
+  <text x="50" y="210" font-family="ui-monospace, monospace" font-size="11" fill="rgba(255,255,255,0.6)">PENSION FUNDS ............. NONE</text>
+  <text x="50" y="235" font-family="ui-monospace, monospace" font-size="11" fill="rgba(255,255,255,0.6)">INSTITUTIONAL INVESTORS ... NONE</text>
+  <text x="50" y="260" font-family="ui-monospace, monospace" font-size="11" fill="rgba(255,255,255,0.6)">PUBLIC REPORTING .......... EXEMPT</text>
+
+  <!-- Large Rubber Stamp -->
+  <g transform="translate(130, 380) rotate(-12)">
+    <rect x="-10" y="-10" width="260" height="70" rx="4" fill="rgba(239, 68, 68, 0.15)" stroke="#EF4444" stroke-width="4"/>
+    <text x="120" y="32" font-family="'SF Pro Display', sans-serif" font-size="24" font-weight="900" fill="#EF4444" text-anchor="middle" letter-spacing="0.14em">EXEMPT</text>
+    <text x="120" y="52" font-family="ui-monospace, monospace" font-size="10" font-weight="700" fill="#EF4444" text-anchor="middle">PRIVATE FAMILY OFFICE</text>
+  </g>
+</svg>

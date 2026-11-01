@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 320" fill="none">
+  <!-- Waterline -->
+  <line x1="20" y1="100" x2="380" y2="100" stroke="#38BDF8" stroke-width="2" stroke-dasharray="6,4"/>
+  <text x="30" y="92" font-family="ui-monospace, monospace" font-size="10" fill="#38BDF8">PUBLIC SURFACE WATERLINE</text>
+  <!-- Tip of Iceberg -->
+  <polygon points="200,30 230,98 170,98" fill="rgba(56, 189, 248, 0.4)" stroke="#38BDF8" stroke-width="2"/>
+  <text x="200" y="65" font-family="'SF Pro Display', sans-serif" font-size="11" font-weight="bold" fill="#FFFFFF" text-anchor="middle">$50T PUBLIC</text>
+  <!-- Submerged Mountain -->
+  <polygon points="170,102 230,102 320,280 80,280" fill="rgba(239, 68, 68, 0.25)" stroke="#EF4444" stroke-width="3"/>
+  <text x="200" y="180" font-family="'SF Pro Display', sans-serif" font-size="20" font-weight="900" fill="#FFFFFF" text-anchor="middle">$100+ TRILLION</text>
+  <text x="200" y="205" font-family="'SF Pro Display', sans-serif" font-size="12" font-weight="bold" fill="#EF4444" text-anchor="middle">UNREGULATED SHADOW SWAPS</text>
+  <text x="200" y="235" font-family="ui-monospace, monospace" font-size="10" fill="rgba(255,255,255,0.7)" text-anchor="middle">ZERO 13F FILINGS &bull; ZERO TRANSPARENCY</text>
+</svg>

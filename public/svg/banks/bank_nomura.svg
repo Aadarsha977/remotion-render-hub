@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" fill="none">
+  <defs>
+    <linearGradient id="nomGrad" x1="0" y1="0" x2="240" y2="240" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#DC2626" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#7F1D1D" stop-opacity="0.95"/>
+    </linearGradient>
+  </defs>
+  <rect x="10" y="10" width="220" height="220" rx="16" fill="url(#nomGrad)" stroke="rgba(252, 165, 165, 0.4)" stroke-width="2"/>
+  <!-- Stylized N -->
+  <path d="M70 125 V65 L170 125 V65" stroke="#FFFFFF" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="120" y="165" font-family="'SF Pro Display', system-ui, sans-serif" font-size="16" font-weight="800" fill="#FFFFFF" text-anchor="middle" letter-spacing="0.18em">NOMURA</text>
+  <text x="120" y="186" font-family="ui-monospace, monospace" font-size="10" font-weight="600" fill="#FCA5A5" text-anchor="middle" letter-spacing="0.06em">TOKYO PRIME DESK</text>
+</svg>

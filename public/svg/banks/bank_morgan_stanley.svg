@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" fill="none">
+  <defs>
+    <linearGradient id="msGrad" x1="0" y1="0" x2="240" y2="240" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0284C7" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#082F49" stop-opacity="0.95"/>
+    </linearGradient>
+  </defs>
+  <rect x="10" y="10" width="220" height="220" rx="16" fill="url(#msGrad)" stroke="rgba(56, 189, 248, 0.3)" stroke-width="2"/>
+  <!-- MS Geometric Icon -->
+  <path d="M60 120 L85 75 L120 125 L155 75 L180 120" stroke="#38BDF8" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="120" y="160" font-family="'SF Pro Display', system-ui, sans-serif" font-size="14" font-weight="800" fill="#FFFFFF" text-anchor="middle" letter-spacing="0.14em">MORGAN STANLEY</text>
+  <text x="120" y="182" font-family="ui-monospace, monospace" font-size="10" font-weight="600" fill="#38BDF8" text-anchor="middle" letter-spacing="0.08em">EQUITY FINANCING</text>
+</svg>

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" fill="none">
+  <defs>
+    <linearGradient id="archGrad" x1="0" y1="0" x2="240" y2="240" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#1E293B" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#0F172A" stop-opacity="0.98"/>
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0" y1="0" x2="240" y2="240" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FCD34D"/>
+      <stop offset="100%" stop-color="#D97706"/>
+    </linearGradient>
+  </defs>
+  <rect x="10" y="10" width="220" height="220" rx="16" fill="url(#archGrad)" stroke="url(#goldGrad)" stroke-width="2"/>
+  <!-- Greek Alpha / A Crest -->
+  <path d="M120 50 L75 130 H165 Z" stroke="url(#goldGrad)" stroke-width="6" fill="none" stroke-linejoin="round"/>
+  <circle cx="120" cy="100" r="14" fill="url(#goldGrad)"/>
+  <text x="120" y="165" font-family="'SF Pro Display', system-ui, sans-serif" font-size="15" font-weight="900" fill="#FCD34D" text-anchor="middle" letter-spacing="0.18em">ARCHEGOS</text>
+  <text x="120" y="185" font-family="'SF Pro Display', system-ui, sans-serif" font-size="9" font-weight="700" fill="#FFFFFF" text-anchor="middle" letter-spacing="0.22em">CAPITAL MANAGEMENT</text>
+</svg>

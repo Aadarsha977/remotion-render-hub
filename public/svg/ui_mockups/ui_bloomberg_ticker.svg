@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 280" fill="none">
+  <defs>
+    <linearGradient id="bbgBg" x1="0" y1="0" x2="640" y2="280" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0B0D14" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#030712" stop-opacity="0.98"/>
+    </linearGradient>
+  </defs>
+  <rect x="4" y="4" width="632" height="272" rx="8" fill="url(#bbgBg)" stroke="#38BDF8" stroke-opacity="0.3" stroke-width="2"/>
+  <!-- Ticker Bar -->
+  <rect x="16" y="16" width="608" height="34" rx="4" fill="rgba(255,255,255,0.05)"/>
+  <text x="32" y="38" font-family="ui-monospace, monospace" font-size="12" font-weight="bold" fill="#F59E0B">VIAC US  $42.20  ▼ -52.4%</text>
+  <text x="240" y="38" font-family="ui-monospace, monospace" font-size="12" font-weight="bold" fill="#EF4444">DISCA US  $38.10  ▼ -48.1%</text>
+  <text x="450" y="38" font-family="ui-monospace, monospace" font-size="12" font-weight="bold" fill="#EF4444">BIDU US  $185.00  ▼ -34.0%</text>
+  
+  <!-- Falling Vector Graph -->
+  <path d="M30 80 Q120 70 200 90 T350 140 T480 230 L610 260" fill="none" stroke="#EF4444" stroke-width="4" stroke-linecap="round"/>
+  <!-- Baseline Line -->
+  <line x1="30" y1="80" x2="610" y2="80" stroke="rgba(255,255,255,0.15)" stroke-dasharray="4,4"/>
+  <text x="40" y="72" font-family="ui-monospace, monospace" font-size="10" fill="rgba(255,255,255,0.5)">PEAK: $100.34</text>
+  <text x="560" y="250" font-family="ui-monospace, monospace" font-size="12" font-weight="bold" fill="#EF4444">$42.20</text>
+</svg>
