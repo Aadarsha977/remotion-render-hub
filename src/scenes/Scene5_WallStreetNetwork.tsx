@@ -1,318 +1,353 @@
-import React from "react";
-import { AbsoluteFill, interpolate, useCurrentFrame, useVideoConfig } from "remotion";
-import { GridBackground } from "../components/motion/GridBackground";
-import { Camera3D } from "../components/motion/Camera3D";
-import { PaperTexture } from "../components/motion/PaperTexture";
-import { ArchivalStamp } from "../components/motion/ArchivalStamp";
-import { MotionArrow } from "../components/motion/MotionArrow";
-import { KineticTitle } from "../components/motion/KineticTitle";
-import { ThemeMode, THEMES, SceneProps } from "../theme/theme";
+import React from 'react';
+import {
+  AbsoluteFill,
+  interpolate,
+  spring,
+  useCurrentFrame,
+  useVideoConfig,
+} from 'remotion';
+import {
+  CinematicCanvas,
+  KineticGrid,
+  MaskedReveal,
+  GlassCard,
+  DynamicCounter,
+  ProgressRing,
+  ShockwaveCircle,
+  HighlightPill,
+} from '../components/motion';
+import { SceneProps, THEMES } from '../theme/theme';
 
 export const Scene5_WallStreetNetwork: React.FC<SceneProps> = ({
-  theme = "cream",
+  theme = 'cream',
 }) => {
   const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
+  const { fps, durationInFrames } = useVideoConfig();
+  const isCream = theme === 'cream';
   const t = THEMES[theme] || THEMES.cream;
-  const isCream = theme === "cream";
 
-  // Radar ping ring
-  const pingScale = interpolate(frame % 40, [0, 40], [0.8, 2.2], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
+  // Law 10: Attention Reset Event at Frame 75
+  const resetSpring = spring({
+    frame: frame - 75,
+    fps,
+    config: { damping: 13, stiffness: 120, mass: 0.5 },
   });
-  const pingOpacity = interpolate(frame % 40, [0, 40], [0.7, 0], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
+
+  const resetOpacity = interpolate(resetSpring, [0, 1], [0, 1], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+  });
+
+  const resetTranslateY = interpolate(resetSpring, [0, 1], [15, 0], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+  });
+
+  // Animated pulse for converging swap vector lines
+  const pulse = interpolate(frame % 30, [0, 15, 30], [0.4, 0.9, 0.4], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
   });
 
   return (
-    <AbsoluteFill>
-      <GridBackground theme={theme} mood="default" />
-      <PaperTexture theme={theme} opacity={0.35} />
+    <CinematicCanvas
+      durationInFrames={durationInFrames}
+      cameraDriftScale={1.045}
+      baseColor={isCream ? '#12100E' : '#07090E'}
+      gradientColors={{
+        primary: 'rgba(56, 189, 248, 0.18)',   // Tactical Cyan
+        secondary: 'rgba(239, 68, 68, 0.14)',  // Warning Red
+        tertiary: 'rgba(99, 102, 241, 0.1)',   // Indigo
+      }}
+      grainOpacity={0.05}
+      enableVignette={true}
+    >
+      {/* Law 4 & 5: Kinetic Cartesian Grid with Tactical Radar Styling */}
+      <KineticGrid
+        entryFrame={3}
+        cornerLabel="TACTICAL_RADAR // PRIME_BROKER_EXPOSURE_MAP"
+        bracketColor="rgba(56, 189, 248, 0.4)"
+        dotColor="rgba(56, 189, 248, 0.08)"
+      />
 
-      {/* 3D Virtual Camera with slow circular tracking momentum */}
-      <Camera3D
-        durationInFrames={110}
-        zoomFrom={1.0}
-        zoomTo={1.07}
-        panXFrom={-15}
-        panXTo={15}
-        panYFrom={10}
-        panYTo={-10}
-        tiltX={4}
-        tiltY={-4}
+      {/* Law 5: Expanding Shockwave Ripple when the Unregistered Hub Locks */}
+      <ShockwaveCircle
+        startFrame={22}
+        duration={26}
+        size={460}
+        color="#38BDF8"
+        strokeWidth={3}
+      />
+
+      {/* Primary Center Layout */}
+      <AbsoluteFill
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '0 80px',
+        }}
       >
-        <div
+        {/* Law 3 & 5: Status Highlight Pill */}
+        <div style={{ marginBottom: 12 }}>
+          <HighlightPill
+            delay={6}
+            color="rgba(56, 189, 248, 0.16)"
+            borderColor="rgba(56, 189, 248, 0.45)"
+            textColor="#38BDF8"
+          >
+            TACTICAL RADAR MAP • CONVERGING TOTAL RETURN SWAPS
+          </HighlightPill>
+        </div>
+
+        {/* Law 6: Masked Kinetic Typography */}
+        <div style={{ marginBottom: 22, maxWidth: 1150 }}>
+          <MaskedReveal
+            text="WALL STREET DIDN'T EVEN KNOW HIS FIRM EXISTED"
+            delay={10}
+            staggerFrames={2}
+            style={{
+              fontSize: 48,
+              fontWeight: 900,
+              color: '#FFFFFF',
+              fontFamily: "Georgia, 'Times New Roman', serif",
+              lineHeight: 1.1,
+              textTransform: 'uppercase',
+              textShadow: '0 2px 20px rgba(0,0,0,0.8)',
+            }}
+            accentIndices={[0, 1, 8]}
+            accentStyle={{ color: '#38BDF8' }}
+          />
+        </div>
+
+        {/* Law 7 & 9: 3D Frosted GlassCard Housing the Radar Node Network */}
+        <GlassCard
+          delay={16}
+          sheenDelay={42}
+          glowColor="rgba(56, 189, 248, 0.25)"
+          tiltAngle={6}
           style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            paddingTop: 50,
+            padding: '30px 48px',
+            minWidth: 1080,
+            backgroundColor: 'rgba(16, 20, 28, 0.92)',
+            border: '1.5px solid rgba(56, 189, 248, 0.35)',
+            boxShadow: '0 30px 80px -15px rgba(56, 189, 248, 0.2), 0 0 1px rgba(255,255,255,0.2)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 18,
           }}
         >
-          {/* Top Title */}
-          <KineticTitle
-            text="WALL STREET DIDN'T EVEN KNOW"
-            subtitle="TOTAL BLIND SPOT ACROSS THE WORLD'S LARGEST PRIME BROKERS"
-            theme={theme}
-            highlightWords={["WALL", "STREET", "KNOW"]}
-            highlightColor={isCream ? t.accent : t.gold}
-            size={48}
-            delay={5}
-          />
-
-          {/* Tactical Network Map Board */}
+          {/* Top Network Metadata Bar */}
           <div
             style={{
-              position: "relative",
-              width: 1300,
-              height: 600,
-              marginTop: 20,
-              backgroundColor: isCream ? "#FFFFFF" : "#1B1310",
-              border: `2px solid ${t.border}`,
-              borderRadius: 16,
-              boxShadow: isCream
-                ? "0 25px 60px -15px rgba(44, 30, 20, 0.12)"
-                : "0 30px 70px -15px rgba(0, 0, 0, 0.85)",
-              overflow: "hidden",
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+              paddingBottom: 10,
             }}
           >
-            {/* Grid coordinates & drafting lines */}
-            <div
-              style={{
-                position: "absolute",
-                top: 20,
-                left: 30,
-                fontFamily: "monospace",
-                fontSize: 12,
-                color: t.textMuted,
-                letterSpacing: "0.1em",
-              }}
-            >
-              PRIME BROKER DERIVATIVE RADAR • LAT 40.7580° N, LON 73.9855° W
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <span
+                style={{
+                  width: 10,
+                  height: 10,
+                  borderRadius: '50%',
+                  backgroundColor: '#38BDF8',
+                  boxShadow: '0 0 10px #38BDF8',
+                }}
+              />
+              <span
+                style={{
+                  fontFamily: 'monospace',
+                  fontSize: 12,
+                  fontWeight: 800,
+                  color: 'rgba(255, 255, 255, 0.7)',
+                  letterSpacing: '0.12em',
+                }}
+              >
+                MULTI-AGENT PRISONER'S DILEMMA // ISOLATED DERIVATIVE NODES
+              </span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <ProgressRing
+                percentage={100}
+                radius={14}
+                strokeWidth={3}
+                delay={24}
+                strokeColor="#38BDF8"
+              />
+              <DynamicCounter
+                startValue={0}
+                endValue={6}
+                delay={20}
+                prefix="BANKS: "
+                suffix=" PRIME BROKERS"
+                style={{
+                  fontFamily: 'monospace',
+                  fontSize: 12,
+                  fontWeight: 900,
+                  color: '#38BDF8',
+                }}
+              />
+            </div>
+          </div>
+
+          {/* Prime Broker Radar Diagram Container */}
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr 1.2fr 1fr',
+              gap: 24,
+              alignItems: 'center',
+              position: 'relative',
+              padding: '10px 0',
+            }}
+          >
+            {/* Left Bank Nodes */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+              <div
+                style={{
+                  padding: '12px 18px',
+                  backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                  borderRadius: 8,
+                  border: '1px solid rgba(56, 189, 248, 0.3)',
+                }}
+              >
+                <span style={{ fontFamily: 'monospace', fontSize: 13, fontWeight: 900, color: '#FFFFFF', display: 'block' }}>
+                  GOLDMAN SACHS
+                </span>
+                <span style={{ fontFamily: 'monospace', fontSize: 11, color: '#38BDF8' }}>
+                  $3.5B Block Sale Defection
+                </span>
+              </div>
+
+              <div
+                style={{
+                  padding: '12px 18px',
+                  backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                  borderRadius: 8,
+                  border: '1px solid rgba(56, 189, 248, 0.3)',
+                }}
+              >
+                <span style={{ fontFamily: 'monospace', fontSize: 13, fontWeight: 900, color: '#FFFFFF', display: 'block' }}>
+                  MORGAN STANLEY
+                </span>
+                <span style={{ fontFamily: 'monospace', fontSize: 11, color: '#38BDF8' }}>
+                  $5.0B Pre-Market Liquidation
+                </span>
+              </div>
             </div>
 
-            {/* Central Radar Ping Anomaly */}
+            {/* Center Unregistered Ghost Hub */}
             <div
               style={{
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                width: 320,
-                height: 320,
-                borderRadius: "50%",
-                border: `2px dashed ${t.danger}`,
-                transformOrigin: "center center",
-                pointerEvents: "none",
-              }}
-            />
-            <div
-              style={{
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                width: 260,
-                height: 260,
-                borderRadius: "50%",
-                border: `2px solid ${t.danger}`,
-                transform: `translate(-50%, -50%) scale(${pingScale})`,
-                opacity: pingOpacity,
-                pointerEvents: "none",
-              }}
-            />
-
-            {/* Central Ghost Fund Entity Card */}
-            <div
-              style={{
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                backgroundColor: isCream ? "#FEF2F2" : "#281212",
-                border: `2.5px solid ${t.danger}`,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '20px 16px',
+                backgroundColor: 'rgba(220, 38, 38, 0.12)',
                 borderRadius: 12,
-                padding: "20px 32px",
-                textAlign: "center",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: 6,
-                boxShadow: isCream ? "0 10px 30px rgba(220, 38, 38, 0.2)" : "0 0 30px rgba(244, 63, 94, 0.4)",
-                zIndex: 10,
+                border: '2px dashed #EF4444',
+                textAlign: 'center',
+                boxShadow: '0 0 30px rgba(239, 68, 68, 0.25)',
               }}
             >
-              <span style={{ fontFamily: "monospace", fontSize: 11, fontWeight: 900, color: t.danger, letterSpacing: "0.2em" }}>
-                [ 404 UNREGISTERED ]
-              </span>
-              <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 26, fontWeight: 900, color: t.text }}>
+              <HighlightPill
+                delay={22}
+                color="rgba(239, 68, 68, 0.28)"
+                borderColor="#EF4444"
+                textColor="#EF4444"
+              >
+                404: NO SEC REGISTRATION
+              </HighlightPill>
+              <span
+                style={{
+                  fontFamily: 'Georgia, serif',
+                  fontSize: 22,
+                  fontWeight: 900,
+                  color: '#FFFFFF',
+                  marginTop: 10,
+                  display: 'block',
+                }}
+              >
                 ARCHEGOS CAPITAL
               </span>
-              <span style={{ fontFamily: "monospace", fontSize: 12, fontWeight: 800, color: t.danger }}>
-                OVER $50B HIDDEN SWAPS
+              <span style={{ fontFamily: 'monospace', fontSize: 12, color: '#FCA5A5', marginTop: 4 }}>
+                Private Family Office Exemption
               </span>
+              <div style={{ marginTop: 10, display: 'flex', gap: 6, alignItems: 'center' }}>
+                <span style={{ fontSize: 11, fontFamily: 'monospace', color: 'rgba(255,255,255,0.6)' }}>
+                  Synthetic Exposure:
+                </span>
+                <DynamicCounter
+                  startValue={0}
+                  endValue={100}
+                  prefix="$"
+                  suffix="B+"
+                  delay={26}
+                  style={{ fontFamily: 'monospace', fontSize: 15, fontWeight: 900, color: '#EF4444' }}
+                />
+              </div>
             </div>
 
-            {/* Outer Bank Hub 1: Goldman Sachs (Top Left) */}
-            <div
-              style={{
-                position: "absolute",
-                top: 60,
-                left: 80,
-                backgroundColor: isCream ? "#F9F7F4" : "#241A16",
-                border: `1.5px solid ${t.border}`,
-                borderRadius: 8,
-                padding: "14px 22px",
-                zIndex: 5,
-              }}
-            >
-              <span style={{ fontFamily: "Georgia, serif", fontSize: 16, fontWeight: 800, color: t.text, display: "block" }}>
-                Goldman Sachs
-              </span>
-              <span style={{ fontFamily: "monospace", fontSize: 12, color: t.gold, fontWeight: 700 }}>
-                200 West St • $1.2B LOSS
-              </span>
+            {/* Right Bank Nodes */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+              <div
+                style={{
+                  padding: '12px 18px',
+                  backgroundColor: 'rgba(239, 68, 68, 0.08)',
+                  borderRadius: 8,
+                  border: '1px solid rgba(239, 68, 68, 0.4)',
+                }}
+              >
+                <span style={{ fontFamily: 'monospace', fontSize: 13, fontWeight: 900, color: '#FFFFFF', display: 'block' }}>
+                  CREDIT SUISSE
+                </span>
+                <span style={{ fontFamily: 'monospace', fontSize: 11, color: '#F87171' }}>
+                  -$5.5B Fatal Death Blow
+                </span>
+              </div>
+
+              <div
+                style={{
+                  padding: '12px 18px',
+                  backgroundColor: 'rgba(239, 68, 68, 0.08)',
+                  borderRadius: 8,
+                  border: '1px solid rgba(239, 68, 68, 0.4)',
+                }}
+              >
+                <span style={{ fontFamily: 'monospace', fontSize: 13, fontWeight: 900, color: '#FFFFFF', display: 'block' }}>
+                  NOMURA HOLDINGS
+                </span>
+                <span style={{ fontFamily: 'monospace', fontSize: 11, color: '#F87171' }}>
+                  -$2.9B Margin Loss
+                </span>
+              </div>
             </div>
-
-            {/* Outer Bank Hub 2: Morgan Stanley (Top Right) */}
-            <div
-              style={{
-                position: "absolute",
-                top: 60,
-                right: 80,
-                backgroundColor: isCream ? "#F9F7F4" : "#241A16",
-                border: `1.5px solid ${t.border}`,
-                borderRadius: 8,
-                padding: "14px 22px",
-                zIndex: 5,
-              }}
-            >
-              <span style={{ fontFamily: "Georgia, serif", fontSize: 16, fontWeight: 800, color: t.text, display: "block" }}>
-                Morgan Stanley
-              </span>
-              <span style={{ fontFamily: "monospace", fontSize: 12, color: t.gold, fontWeight: 700 }}>
-                1585 Broadway • $911M LOSS
-              </span>
-            </div>
-
-            {/* Outer Bank Hub 3: Credit Suisse (Bottom Left) */}
-            <div
-              style={{
-                position: "absolute",
-                bottom: 60,
-                left: 80,
-                backgroundColor: isCream ? "#FEF2F2" : "#2B1414",
-                border: `2px solid ${t.danger}`,
-                borderRadius: 8,
-                padding: "14px 22px",
-                zIndex: 5,
-              }}
-            >
-              <span style={{ fontFamily: "Georgia, serif", fontSize: 16, fontWeight: 900, color: t.danger, display: "block" }}>
-                Credit Suisse
-              </span>
-              <span style={{ fontFamily: "monospace", fontSize: 12, color: t.danger, fontWeight: 800 }}>
-                11 Madison Ave • -$5.5B CATASTROPHE
-              </span>
-            </div>
-
-            {/* Converging Derivative Flow Vectors (Inside Board) */}
-            <svg
-              width={1300}
-              height={600}
-              style={{
-                position: "absolute",
-                inset: 0,
-                pointerEvents: "none",
-                zIndex: 4,
-              }}
-            >
-              <defs>
-                <marker
-                  id="gold-arrow"
-                  viewBox="0 0 10 10"
-                  refX="6"
-                  refY="5"
-                  markerWidth="6"
-                  markerHeight="6"
-                  orient="auto-start-reverse"
-                >
-                  <path d="M 0 1 L 10 5 L 0 9 z" fill={t.gold} />
-                </marker>
-                <marker
-                  id="danger-arrow"
-                  viewBox="0 0 10 10"
-                  refX="6"
-                  refY="5"
-                  markerWidth="6"
-                  markerHeight="6"
-                  orient="auto-start-reverse"
-                >
-                  <path d="M 0 1 L 10 5 L 0 9 z" fill={t.danger} />
-                </marker>
-              </defs>
-
-              {/* Vector 1: Goldman -> Archegos */}
-              <line
-                x1={290}
-                y1={120}
-                x2={490}
-                y2={260}
-                stroke={t.gold}
-                strokeWidth={2.5}
-                strokeDasharray="6,4"
-                markerEnd="url(#gold-arrow)"
-                opacity={interpolate(frame, [15, 30], [0, 0.9], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })}
-              />
-
-              {/* Vector 2: Morgan Stanley -> Archegos */}
-              <line
-                x1={1010}
-                y1={120}
-                x2={810}
-                y2={260}
-                stroke={t.gold}
-                strokeWidth={2.5}
-                strokeDasharray="6,4"
-                markerEnd="url(#gold-arrow)"
-                opacity={interpolate(frame, [22, 38], [0, 0.9], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })}
-              />
-
-              {/* Vector 3: Credit Suisse -> Archegos */}
-              <line
-                x1={290}
-                y1={480}
-                x2={490}
-                y2={340}
-                stroke={t.danger}
-                strokeWidth={3}
-                strokeDasharray="6,4"
-                markerEnd="url(#danger-arrow)"
-                opacity={interpolate(frame, [30, 45], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })}
-              />
-
-              {/* Vector 4: Nomura -> Archegos */}
-              <line
-                x1={1010}
-                y1={480}
-                x2={810}
-                y2={340}
-                stroke={t.danger}
-                strokeWidth={3}
-                strokeDasharray="6,4"
-                markerEnd="url(#danger-arrow)"
-                opacity={interpolate(frame, [36, 52], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })}
-              />
-            </svg>
           </div>
+        </GlassCard>
+
+        {/* Law 10: Attention Reset Banner at Frame 75 */}
+        <div
+          style={{
+            marginTop: 18,
+            opacity: resetOpacity,
+            transform: `translateY(${resetTranslateY}px)`,
+          }}
+        >
+          <HighlightPill
+            delay={75}
+            color="rgba(56, 189, 248, 0.22)"
+            borderColor="#38BDF8"
+            textColor="#E0F2FE"
+          >
+            CONCEALED MULTIPLIER: EACH BANK BELIEVED THEY WERE ARCHEGOS'S SOLE MARGIN LENDER
+          </HighlightPill>
         </div>
-      </Camera3D>
-    </AbsoluteFill>
+      </AbsoluteFill>
+    </CinematicCanvas>
   );
 };

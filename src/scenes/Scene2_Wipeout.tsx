@@ -1,266 +1,275 @@
-import React from "react";
-import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig } from "remotion";
-import { GridBackground } from "../components/motion/GridBackground";
-import { Camera3D } from "../components/motion/Camera3D";
-import { PaperTexture } from "../components/motion/PaperTexture";
-import { ArchivalStamp } from "../components/motion/ArchivalStamp";
-import { MotionArrow } from "../components/motion/MotionArrow";
-import { ThemeMode, THEMES, SceneProps } from "../theme/theme";
+import React from 'react';
+import {
+  AbsoluteFill,
+  interpolate,
+  spring,
+  useCurrentFrame,
+  useVideoConfig,
+} from 'remotion';
+import {
+  CinematicCanvas,
+  KineticGrid,
+  MaskedReveal,
+  GlassCard,
+  DynamicCounter,
+  ProgressRing,
+  ShockwaveCircle,
+  HighlightPill,
+} from '../components/motion';
+import { SceneProps, THEMES } from '../theme/theme';
 
 export const Scene2_Wipeout: React.FC<SceneProps> = ({
-  theme = "cream",
+  theme = 'cream',
 }) => {
   const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
+  const { fps, durationInFrames } = useVideoConfig();
+  const isCream = theme === 'cream';
   const t = THEMES[theme] || THEMES.cream;
-  const isCream = theme === "cream";
 
-  // Rapid countdown for 36 hours
-  const countdownProgress = interpolate(frame, [30, 95], [1, 0.05], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
+  // Law 10: 4-Second Attention Reset Event at Frame 90
+  const resetSpring = spring({
+    frame: frame - 90,
+    fps,
+    config: { damping: 13, stiffness: 120, mass: 0.5 },
   });
-  const currentHours = Math.max(0, Math.round(36 * countdownProgress));
 
-  // Counter animation from 0 to 20,000,000,000
-  const counterProgress = interpolate(frame, [10, 45], [0, 1], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
+  const resetOpacity = interpolate(resetSpring, [0, 1], [0, 1], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
   });
-  const displayVal = Math.round(20000000000 * counterProgress);
-  const formattedVal = displayVal.toLocaleString("en-US");
 
-  const circleRadius = 60;
-  const circumference = 2 * Math.PI * circleRadius;
-  const strokeOffset = circumference * (1 - countdownProgress);
+  const resetTranslateY = interpolate(resetSpring, [0, 1], [15, 0], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+  });
 
   return (
-    <AbsoluteFill>
-      <GridBackground theme={theme} mood="danger" />
-      <PaperTexture theme={theme} opacity={0.35} />
+    <CinematicCanvas
+      durationInFrames={durationInFrames}
+      cameraDriftScale={1.05}
+      baseColor={isCream ? '#160E0B' : '#0B0706'}
+      gradientColors={{
+        primary: 'rgba(239, 68, 68, 0.22)',   // Warning Crimson
+        secondary: 'rgba(217, 119, 6, 0.15)',  // Amber Fire
+        tertiary: 'rgba(26, 16, 14, 0.6)',     // Deep Charcoal
+      }}
+      grainOpacity={0.055}
+      enableVignette={true}
+    >
+      {/* Law 4 & 5: Kinetic Cartesian Grid with Warning Red Accents */}
+      <KineticGrid
+        entryFrame={3}
+        cornerLabel="COLLAPSE RUNNER // MARGIN_CALL_DEATH_SPIRAL"
+        bracketColor="rgba(239, 68, 68, 0.4)"
+        dotColor="rgba(239, 68, 68, 0.08)"
+      />
 
-      {/* 3D Virtual Camera with dramatic pull-back momentum */}
-      <Camera3D
-        durationInFrames={145}
-        zoomFrom={1.08}
-        zoomTo={1.0}
-        panXFrom={15}
-        panXTo={-15}
-        panYFrom={-10}
-        panYTo={10}
-        tiltX={-3}
-        tiltY={3}
+      {/* Law 5: Expanding Shockwave Ripple when the $20B Metric Slams */}
+      <ShockwaveCircle
+        startFrame={20}
+        duration={28}
+        size={520}
+        color="#EF4444"
+        strokeWidth={3}
+      />
+
+      {/* Primary Center Layout */}
+      <AbsoluteFill
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '0 80px',
+        }}
       >
-        <div
+        {/* Law 3 & 5: Status Highlight Pill */}
+        <div style={{ marginBottom: 14 }}>
+          <HighlightPill
+            delay={6}
+            color="rgba(239, 68, 68, 0.18)"
+            borderColor="rgba(239, 68, 68, 0.5)"
+            textColor="#F87171"
+          >
+            TERMINAL LIQUIDATION DISPATCH • VELOCITY: $555M / HOUR
+          </HighlightPill>
+        </div>
+
+        {/* Law 6: Masked Kinetic Typography */}
+        <div style={{ marginBottom: 28, maxWidth: 1200 }}>
+          <MaskedReveal
+            text="ONE MAN LOST 20 BILLION DOLLARS IN UNDER 36 HOURS"
+            delay={10}
+            staggerFrames={2}
+            style={{
+              fontSize: 48,
+              fontWeight: 900,
+              color: '#FFFFFF',
+              fontFamily: "Georgia, 'Times New Roman', serif",
+              lineHeight: 1.1,
+              textTransform: 'uppercase',
+              textShadow: '0 2px 20px rgba(0,0,0,0.8)',
+            }}
+            accentIndices={[3, 4]}
+            accentStyle={{ color: '#EF4444' }}
+          />
+        </div>
+
+        {/* Law 7 & 9: 3D Frosted Terminal GlassCard with Specular Sheen Pass */}
+        <GlassCard
+          delay={18}
+          sheenDelay={42}
+          glowColor="rgba(239, 68, 68, 0.28)"
+          tiltAngle={7}
           style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 24,
-            padding: "0 80px",
+            padding: '38px 56px',
+            minWidth: 1080,
+            backgroundColor: 'rgba(28, 16, 14, 0.88)',
+            border: '1.5px solid rgba(239, 68, 68, 0.35)',
+            boxShadow: '0 30px 80px -15px rgba(220, 38, 38, 0.25), 0 0 1px rgba(255,255,255,0.2)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
           }}
         >
-          {/* Top Classification Banner */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 16,
-              background: isCream ? "#FEF2F2" : "rgba(244, 63, 94, 0.15)",
-              border: `1.5px solid ${t.danger}`,
-              padding: "8px 24px",
-              borderRadius: 999,
-            }}
-          >
+          {/* Left Column: Live Ticking Negative Capital Odometer */}
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
             <span
               style={{
-                width: 10,
-                height: 10,
-                borderRadius: "50%",
-                background: t.danger,
-                boxShadow: `0 0 10px ${t.danger}`,
-              }}
-            />
-            <span
-              style={{
-                fontFamily: "monospace",
-                fontSize: 14,
-                fontWeight: 900,
-                color: t.danger,
-                letterSpacing: "0.15em",
-                textTransform: "uppercase",
-              }}
-            >
-              CRITICAL MARGIN CALL DEFAULT • NEW YORK DISPATCH
-            </span>
-          </div>
-
-          {/* Massive Screen-Filling Hero Ticker Monolith */}
-          <div
-            style={{
-              width: "100%",
-              maxWidth: 1300,
-              backgroundColor: isCream ? "#FFFFFF" : "#1F1511",
-              border: `2px solid ${isCream ? "#FCA5A5" : "rgba(244, 63, 94, 0.4)"}`,
-              borderRadius: 16,
-              boxShadow: isCream
-                ? "0 25px 50px -12px rgba(220, 38, 38, 0.15), 0 0 1px rgba(0,0,0,0.15)"
-                : "0 30px 60px -12px rgba(0, 0, 0, 0.8), 0 0 40px rgba(244, 63, 94, 0.15)",
-              padding: "40px 60px",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              position: "relative",
-              overflow: "hidden",
-            }}
-          >
-            {/* Background distress scanline */}
-            <div
-              style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                right: 0,
-                height: 4,
-                background: `linear-gradient(90deg, ${t.danger}, ${t.accent}, ${t.danger})`,
-              }}
-            />
-
-            <span
-              style={{
-                fontFamily: "monospace",
-                fontSize: 16,
+                fontFamily: 'monospace',
+                fontSize: 13,
                 fontWeight: 800,
-                color: t.danger,
-                letterSpacing: "0.2em",
-                textTransform: "uppercase",
+                color: 'rgba(255, 255, 255, 0.6)',
+                letterSpacing: '0.12em',
+                textTransform: 'uppercase',
                 marginBottom: 8,
               }}
             >
-              TOTAL CAPITAL ERADICATED
+              CUMULATIVE CAPITAL WIPEOUT (NET WORTH ERASED)
             </span>
 
-            {/* Giant Monolithic Number */}
-            <div
-              style={{
-                display: "flex",
-                alignItems: "baseline",
-                gap: 4,
-                color: t.danger,
-              }}
-            >
-              <span style={{ fontSize: 56, fontWeight: 900, lineHeight: 1 }}>-$</span>
-              <span
+            {/* Live Ticking -$20,000,000,000 Metric */}
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
+              <DynamicCounter
+                startValue={0}
+                endValue={-20000000000}
+                delay={20}
+                prefix="-$"
+                useGrouping={true}
                 style={{
-                  fontFamily: "'Inter', monospace",
-                  fontSize: 104,
+                  fontFamily: 'monospace',
+                  fontSize: 74,
                   fontWeight: 900,
-                  letterSpacing: "-0.05em",
+                  color: '#EF4444',
                   lineHeight: 1,
-                  textShadow: !isCream ? "0 0 40px rgba(244, 63, 94, 0.6)" : "none",
+                  textShadow: '0 0 35px rgba(239, 68, 68, 0.55)',
+                  letterSpacing: '-0.02em',
                 }}
-              >
-                {formattedVal}
-              </span>
-            </div>
-
-            {/* Stamp Overlay */}
-            <div style={{ position: "absolute", top: 25, right: 40 }}>
-              <ArchivalStamp
-                text="DEFAULTED"
-                subtext="100% LOSS"
-                delay={22}
-                rotation={14}
-                color={t.danger}
-                borderColor={t.danger}
-                size={22}
               />
             </div>
 
-            {/* Secondary Metric Bar */}
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                width: "100%",
-                marginTop: 28,
-                paddingTop: 20,
-                borderTop: `1px solid ${t.border}`,
-              }}
-            >
-              <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                <span style={{ fontFamily: "monospace", fontSize: 13, color: t.textMuted, fontWeight: 700 }}>
-                  ACCELERATION
-                </span>
-                <span style={{ fontFamily: "monospace", fontSize: 22, fontWeight: 900, color: t.text }}>
-                  $555,000,000 PER HOUR
-                </span>
-              </div>
-
-              {/* 36 Hours Countdown Pill */}
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 16,
-                  padding: "8px 20px",
-                  borderRadius: 12,
-                  backgroundColor: isCream ? "#FEF3C7" : "rgba(245, 158, 11, 0.15)",
-                  border: `1px solid ${t.borderAccent}`,
-                }}
+            <div style={{ marginTop: 12, display: 'flex', gap: 12 }}>
+              <HighlightPill
+                delay={28}
+                color="rgba(239, 68, 68, 0.22)"
+                borderColor="#EF4444"
+                textColor="#FCA5A5"
               >
-                <div style={{ position: "relative", width: 50, height: 50 }}>
-                  <svg width={50} height={50} style={{ transform: "rotate(-90deg)" }}>
-                    <circle cx={25} cy={25} r={20} fill="none" stroke={t.border} strokeWidth={4} />
-                    <circle
-                      cx={25}
-                      cy={25}
-                      r={20}
-                      fill="none"
-                      stroke={t.gold}
-                      strokeWidth={4}
-                      strokeDasharray={2 * Math.PI * 20}
-                      strokeDashoffset={2 * Math.PI * 20 * (1 - countdownProgress)}
-                      strokeLinecap="round"
-                    />
-                  </svg>
-                  <div
-                    style={{
-                      position: "absolute",
-                      inset: 0,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      fontFamily: "monospace",
-                      fontSize: 12,
-                      fontWeight: 800,
-                      color: t.text,
-                    }}
-                  >
-                    {currentHours}h
-                  </div>
-                </div>
-
-                <div style={{ display: "flex", flexDirection: "column" }}>
-                  <span style={{ fontFamily: "monospace", fontSize: 11, fontWeight: 800, color: t.gold }}>
-                    ELAPSED WINDOW
-                  </span>
-                  <span style={{ fontFamily: "system-ui", fontSize: 18, fontWeight: 900, color: t.text }}>
-                    UNDER 36 HOURS
-                  </span>
-                </div>
-              </div>
+                -100% COLLATERAL EVAPORATED
+              </HighlightPill>
+              <HighlightPill
+                delay={34}
+                color="rgba(245, 158, 11, 0.15)"
+                borderColor="#F59E0B"
+                textColor="#FCD34D"
+              >
+                UNWIND RATE: $9.25M / MINUTE
+              </HighlightPill>
             </div>
           </div>
+
+          {/* Right Column: Depleting 36-Hour Circular Telemetry Gauge */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 20,
+              borderLeft: '1px solid rgba(255, 255, 255, 0.12)',
+              paddingLeft: 36,
+            }}
+          >
+            <ProgressRing
+              percentage={92}
+              radius={46}
+              strokeWidth={6}
+              delay={24}
+              strokeColor="#EF4444"
+              trackColor="rgba(255, 255, 255, 0.08)"
+            />
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <span
+                style={{
+                  fontFamily: 'monospace',
+                  fontSize: 12,
+                  fontWeight: 800,
+                  color: 'rgba(255, 255, 255, 0.5)',
+                  letterSpacing: '0.1em',
+                  textTransform: 'uppercase',
+                }}
+              >
+                TOTAL TIMEFRAME
+              </span>
+              <div style={{ display: 'flex', alignItems: 'baseline' }}>
+                <span
+                  style={{
+                    fontFamily: 'monospace',
+                    fontSize: 48,
+                    fontWeight: 900,
+                    color: '#FFFFFF',
+                    lineHeight: 1,
+                  }}
+                >
+                  &lt;
+                </span>
+                <DynamicCounter
+                  startValue={0}
+                  endValue={36}
+                  delay={24}
+                  suffix="h"
+                  style={{
+                    fontFamily: 'monospace',
+                    fontSize: 48,
+                    fontWeight: 900,
+                    color: '#FFFFFF',
+                    lineHeight: 1,
+                  }}
+                />
+              </div>
+              <span style={{ fontSize: 13, color: 'rgba(255, 255, 255, 0.5)', marginTop: 4 }}>
+                Thursday 8PM → Saturday 8AM
+              </span>
+            </div>
+          </div>
+        </GlassCard>
+
+        {/* Law 10: 4-Second Attention Reset Banner at Frame 90 */}
+        <div
+          style={{
+            marginTop: 22,
+            opacity: resetOpacity,
+            transform: `translateY(${resetTranslateY}px)`,
+          }}
+        >
+          <HighlightPill
+            delay={90}
+            color="rgba(239, 68, 68, 0.28)"
+            borderColor="#EF4444"
+            textColor="#FEE2E2"
+          >
+            🚨 SYSTEMIC RISK ALERT: 6 WALL STREET PRIME BROKERS RECEIVE SIMULTANEOUS DEFAULT NOTICES
+          </HighlightPill>
         </div>
-      </Camera3D>
-    </AbsoluteFill>
+      </AbsoluteFill>
+    </CinematicCanvas>
   );
 };

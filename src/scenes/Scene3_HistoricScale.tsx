@@ -1,282 +1,356 @@
-import React from "react";
-import { AbsoluteFill, spring, useCurrentFrame, useVideoConfig } from "remotion";
-import { GridBackground } from "../components/motion/GridBackground";
-import { Camera3D } from "../components/motion/Camera3D";
-import { PaperTexture } from "../components/motion/PaperTexture";
-import { ArchivalStamp } from "../components/motion/ArchivalStamp";
-import { MotionArrow } from "../components/motion/MotionArrow";
-import { KineticTitle } from "../components/motion/KineticTitle";
-import { ThemeMode, THEMES, SceneProps } from "../theme/theme";
+import React from 'react';
+import {
+  AbsoluteFill,
+  interpolate,
+  spring,
+  useCurrentFrame,
+  useVideoConfig,
+} from 'remotion';
+import {
+  CinematicCanvas,
+  KineticGrid,
+  MaskedReveal,
+  GlassCard,
+  DynamicCounter,
+  ProgressRing,
+  ShockwaveCircle,
+  HighlightPill,
+  ArchivalStamp,
+} from '../components/motion';
+import { SceneProps, THEMES } from '../theme/theme';
 
 export const Scene3_HistoricScale: React.FC<SceneProps> = ({
-  theme = "cream",
+  theme = 'cream',
 }) => {
   const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
+  const { fps, durationInFrames } = useVideoConfig();
+  const isCream = theme === 'cream';
   const t = THEMES[theme] || THEMES.cream;
-  const isCream = theme === "cream";
 
-  // Staggered bar growth physics
-  const bar1Grow = spring({
-    frame: Math.max(0, frame - 15),
+  // Spring physics for the three bar pillars
+  const baringsSpring = spring({
+    frame: frame - 22,
     fps,
-    config: { damping: 14, stiffness: 100 },
+    config: { damping: 14, stiffness: 100, mass: 0.6 },
+  });
+  const socgenSpring = spring({
+    frame: frame - 26,
+    fps,
+    config: { damping: 14, stiffness: 100, mass: 0.6 },
+  });
+  const archegosSpring = spring({
+    frame: frame - 32,
+    fps,
+    config: { damping: 12, stiffness: 90, mass: 0.7 },
   });
 
-  const bar2Grow = spring({
-    frame: Math.max(0, frame - 25),
-    fps,
-    config: { damping: 14, stiffness: 100 },
+  const baringsH = interpolate(baringsSpring, [0, 1], [0, 55], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+  });
+  const socgenH = interpolate(socgenSpring, [0, 1], [0, 110], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+  });
+  const archegosH = interpolate(archegosSpring, [0, 1], [0, 230], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
   });
 
-  const bar3Grow = spring({
-    frame: Math.max(0, frame - 35),
+  // Law 10: 4-Second Attention Reset Event at Frame 90
+  const resetSpring = spring({
+    frame: frame - 90,
     fps,
-    config: { damping: 11, stiffness: 85, mass: 1.3 },
+    config: { damping: 13, stiffness: 120, mass: 0.5 },
+  });
+
+  const resetOpacity = interpolate(resetSpring, [0, 1], [0, 1], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+  });
+
+  const resetTranslateY = interpolate(resetSpring, [0, 1], [15, 0], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
   });
 
   return (
-    <AbsoluteFill>
-      <GridBackground theme={theme} mood="default" />
-      <PaperTexture theme={theme} opacity={0.35} />
+    <CinematicCanvas
+      durationInFrames={durationInFrames}
+      cameraDriftScale={1.045}
+      baseColor={isCream ? '#F4EFEA' : '#110D0C'}
+      gradientColors={{
+        primary: isCream ? 'rgba(194, 139, 56, 0.16)' : 'rgba(212, 175, 55, 0.14)',
+        secondary: 'rgba(239, 68, 68, 0.12)',
+        tertiary: isCream ? 'rgba(44, 62, 80, 0.08)' : 'rgba(28, 18, 16, 0.5)',
+      }}
+      grainOpacity={0.05}
+      enableVignette={true}
+    >
+      {/* Law 4 & 5: Kinetic Cartesian Grid */}
+      <KineticGrid
+        entryFrame={4}
+        cornerLabel="HISTORIC_SCALE // ALL_TIME_HIGH_DEVIATION"
+        bracketColor={isCream ? 'rgba(26, 22, 21, 0.35)' : 'rgba(229, 192, 123, 0.35)'}
+        dotColor={isCream ? 'rgba(26, 22, 21, 0.07)' : 'rgba(255, 255, 255, 0.05)'}
+      />
 
-      {/* Upward tilting virtual camera following the monolith */}
-      <Camera3D
-        durationInFrames={143}
-        zoomFrom={1.0}
-        zoomTo={1.08}
-        panXFrom={0}
-        panXTo={0}
-        panYFrom={40}
-        panYTo={-30}
-        tiltX={6}
-        tiltY={-2}
+      {/* Law 5: Expanding Shockwave Ripple when the Archegos Skyscraper Monolith Shoots Up */}
+      <ShockwaveCircle
+        startFrame={32}
+        duration={26}
+        size={480}
+        color="#EF4444"
+        strokeWidth={3}
+      />
+
+      {/* Primary Center Layout */}
+      <AbsoluteFill
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '0 80px',
+        }}
       >
-        <div
+        {/* Law 3 & 5: Status Highlight Pill */}
+        <div style={{ marginBottom: 12 }}>
+          <HighlightPill
+            delay={8}
+            color={isCream ? 'rgba(194, 139, 56, 0.15)' : 'rgba(212, 175, 55, 0.15)'}
+            borderColor={isCream ? 'rgba(194, 139, 56, 0.45)' : 'rgba(212, 175, 55, 0.45)'}
+            textColor={isCream ? '#92400E' : '#E5C07B'}
+          >
+            GLOBAL FINANCIAL RECORD COMPARISON
+          </HighlightPill>
+        </div>
+
+        {/* Law 6: Masked Kinetic Typography */}
+        <div style={{ marginBottom: 24, maxWidth: 1200 }}>
+          <MaskedReveal
+            text="LARGEST SINGLE PERSON TRADING LOSS IN HUMAN HISTORY"
+            delay={12}
+            staggerFrames={2}
+            style={{
+              fontSize: 46,
+              fontWeight: 900,
+              color: t.text,
+              fontFamily: "Georgia, 'Times New Roman', serif",
+              lineHeight: 1.1,
+              textTransform: 'uppercase',
+            }}
+            accentIndices={[3, 4]}
+            accentStyle={{ color: t.danger }}
+          />
+        </div>
+
+        {/* Law 7 & 9: 3D Frosted GlassCard with Specular Sheen Pass */}
+        <GlassCard
+          delay={18}
+          sheenDelay={48}
+          glowColor="rgba(239, 68, 68, 0.22)"
+          tiltAngle={6}
           style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            paddingTop: 50,
+            padding: '30px 48px',
+            minWidth: 1050,
+            backgroundColor: isCream ? 'rgba(255, 255, 255, 0.9)' : 'rgba(28, 20, 17, 0.9)',
+            border: `1.5px solid ${t.border}`,
+            boxShadow: isCream
+              ? '0 25px 60px -15px rgba(44, 30, 20, 0.15), 0 0 1px rgba(0,0,0,0.2)'
+              : '0 30px 70px -15px rgba(0, 0, 0, 0.9)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 20,
           }}
         >
-          {/* Top Title */}
-          <KineticTitle
-            text="LARGEST TRADING LOSS IN HUMAN HISTORY"
-            subtitle="HISTORICAL SCALE BENCHMARK OF ALL-TIME FINANCIAL COLLAPSES"
-            theme={theme}
-            highlightWords={["LARGEST", "HUMAN", "HISTORY"]}
-            highlightColor={isCream ? t.accent : t.gold}
-            size={46}
-            delay={5}
-          />
-
-          {/* Massive Architectural Bar Monolith Container */}
+          {/* Top Comparative Context Header */}
           <div
             style={{
-              position: "relative",
-              width: 1200,
-              height: 600,
-              marginTop: 20,
-              backgroundColor: isCream ? "#FFFFFF" : "#1F1511",
-              border: `2px solid ${t.border}`,
-              borderRadius: 16,
-              boxShadow: isCream
-                ? "0 25px 60px -15px rgba(44, 30, 20, 0.12), 0 0 1px rgba(0,0,0,0.15)"
-                : "0 30px 70px -15px rgba(0, 0, 0, 0.85)",
-              display: "flex",
-              alignItems: "flex-end",
-              justifyContent: "space-around",
-              paddingBottom: 40,
-              paddingLeft: 60,
-              paddingRight: 60,
-              overflow: "hidden",
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              borderBottom: `1.5px solid ${t.border}`,
+              paddingBottom: 10,
             }}
           >
-            {/* Background horizontal benchmark grid lines */}
-            {[100, 200, 300, 400, 500].map((y) => (
-              <div
-                key={y}
-                style={{
-                  position: "absolute",
-                  bottom: y,
-                  left: 40,
-                  right: 40,
-                  height: 1,
-                  background: isCream ? "rgba(44, 30, 20, 0.06)" : "rgba(255, 255, 255, 0.06)",
-                }}
-              />
-            ))}
-
-            {/* Stamp Overlay */}
-            <div style={{ position: "absolute", top: 25, right: 35 }}>
-              <ArchivalStamp
-                text="NEW WORLD RECORD"
-                subtext="MARCH 2021"
-                delay={40}
-                rotation={-8}
-                color={t.danger}
-                borderColor={t.danger}
-                size={20}
-              />
-            </div>
-
-            {/* Bar 1: Nick Leeson / Barings Bank */}
-            <div
+            <span
               style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: 14,
-                width: 220,
-                zIndex: 2,
+                fontFamily: 'monospace',
+                fontSize: 12,
+                fontWeight: 800,
+                color: t.textMuted,
+                letterSpacing: '0.12em',
+                textTransform: 'uppercase',
               }}
             >
+              CATASTROPHIC ROGUE TRADING & LIQUIDATION BENCHMARKS
+            </span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <ProgressRing
+                percentage={100}
+                radius={16}
+                strokeWidth={3}
+                delay={30}
+                strokeColor="#EF4444"
+              />
               <span
                 style={{
-                  fontFamily: "'Inter', monospace",
-                  fontSize: 20,
-                  fontWeight: 800,
-                  color: t.textMuted,
-                  opacity: bar1Grow,
+                  fontFamily: 'monospace',
+                  fontSize: 13,
+                  fontWeight: 900,
+                  color: t.danger,
                 }}
               >
-                $1.3 BILLION
+                +185% HISTORIC JUMP
               </span>
-              <div
-                style={{
-                  width: 120,
-                  height: Math.max(18, 25 * bar1Grow),
-                  borderRadius: "6px 6px 0 0",
-                  background: isCream
-                    ? "linear-gradient(to top, #D6D3D1, #A8A29E)"
-                    : "linear-gradient(to top, #475569, #94A3B8)",
-                  border: `1.5px solid ${t.border}`,
-                }}
-              />
-              <div style={{ textAlign: "center" }}>
-                <span style={{ fontFamily: "Georgia, serif", fontSize: 16, fontWeight: 700, color: t.text, display: "block" }}>
-                  Nick Leeson
-                </span>
-                <span style={{ fontFamily: "monospace", fontSize: 12, color: t.textMuted }}>
-                  Barings Bank (1995)
-                </span>
-              </div>
             </div>
+          </div>
 
-            {/* Bar 2: Jérôme Kerviel / SocGen */}
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: 14,
-                width: 220,
-                zIndex: 2,
-              }}
-            >
-              <span
-                style={{
-                  fontFamily: "'Inter', monospace",
-                  fontSize: 22,
-                  fontWeight: 800,
-                  color: t.gold,
-                  opacity: bar2Grow,
-                }}
-              >
-                $7.0 BILLION
-              </span>
-              <div
-                style={{
-                  width: 130,
-                  height: 90 * bar2Grow,
-                  borderRadius: "8px 8px 0 0",
-                  background: isCream
-                    ? "linear-gradient(to top, #D97706, #B45309)"
-                    : "linear-gradient(to top, #B45309, #F59E0B)",
-                  border: `1.5px solid ${t.borderAccent}`,
-                }}
-              />
-              <div style={{ textAlign: "center" }}>
-                <span style={{ fontFamily: "Georgia, serif", fontSize: 16, fontWeight: 700, color: t.text, display: "block" }}>
-                  Jérôme Kerviel
-                </span>
-                <span style={{ fontFamily: "monospace", fontSize: 12, color: t.textMuted }}>
-                  Société Générale (2008)
-                </span>
-              </div>
-            </div>
-
-            {/* Bar 3: Archegos / Bill Hwang (The Monolith) */}
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: 10,
-                width: 280,
-                zIndex: 2,
-              }}
-            >
-              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4, opacity: bar3Grow }}>
-                <span
+          {/* Three Comparative Monolith Pillars */}
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr 1.4fr',
+              gap: 28,
+              alignItems: 'flex-end',
+              height: 270,
+              paddingBottom: 10,
+            }}
+          >
+            {/* Pillar 1: Barings Bank (1995) */}
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
+              <div style={{ display: 'flex', alignItems: 'baseline' }}>
+                <DynamicCounter
+                  startValue={0}
+                  endValue={1.3}
+                  decimals={1}
+                  prefix="$"
+                  suffix="B"
+                  delay={22}
                   style={{
-                    fontFamily: "'Inter', monospace",
-                    fontSize: 34,
+                    fontFamily: 'monospace',
+                    fontSize: 26,
+                    fontWeight: 900,
+                    color: t.textMuted,
+                  }}
+                />
+              </div>
+              <div
+                style={{
+                  width: '100%',
+                  height: baringsH,
+                  backgroundColor: isCream ? '#D6D3D1' : '#3F3530',
+                  borderRadius: '6px 6px 0 0',
+                  border: `1px solid ${t.border}`,
+                }}
+              />
+              <div style={{ textAlign: 'center', marginTop: 4 }}>
+                <span style={{ fontFamily: 'Georgia, serif', fontWeight: 800, fontSize: 14, color: t.text, display: 'block' }}>
+                  Barings Bank
+                </span>
+                <span style={{ fontFamily: 'monospace', fontSize: 11, color: t.textMuted }}>
+                  Nick Leeson • 1995
+                </span>
+              </div>
+            </div>
+
+            {/* Pillar 2: Société Générale (2008) */}
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
+              <div style={{ display: 'flex', alignItems: 'baseline' }}>
+                <DynamicCounter
+                  startValue={0}
+                  endValue={7.0}
+                  decimals={1}
+                  prefix="$"
+                  suffix="B"
+                  delay={26}
+                  style={{
+                    fontFamily: 'monospace',
+                    fontSize: 26,
+                    fontWeight: 900,
+                    color: t.textMuted,
+                  }}
+                />
+              </div>
+              <div
+                style={{
+                  width: '100%',
+                  height: socgenH,
+                  backgroundColor: isCream ? '#A8A29E' : '#574842',
+                  borderRadius: '6px 6px 0 0',
+                  border: `1px solid ${t.border}`,
+                }}
+              />
+              <div style={{ textAlign: 'center', marginTop: 4 }}>
+                <span style={{ fontFamily: 'Georgia, serif', fontWeight: 800, fontSize: 14, color: t.text, display: 'block' }}>
+                  Société Générale
+                </span>
+                <span style={{ fontFamily: 'monospace', fontSize: 11, color: t.textMuted }}>
+                  Jérôme Kerviel • 2008
+                </span>
+              </div>
+            </div>
+
+            {/* Pillar 3: Archegos Capital (2021) - Skyscraper Monolith */}
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
+              <div style={{ display: 'flex', alignItems: 'baseline' }}>
+                <DynamicCounter
+                  startValue={0}
+                  endValue={20.0}
+                  decimals={1}
+                  prefix="$"
+                  suffix="B"
+                  delay={32}
+                  style={{
+                    fontFamily: 'monospace',
+                    fontSize: 38,
                     fontWeight: 900,
                     color: t.danger,
-                    lineHeight: 1,
+                    textShadow: '0 0 20px rgba(239, 68, 68, 0.4)',
                   }}
-                >
-                  $20.0 BILLION
-                </span>
-                <span
-                  style={{
-                    fontFamily: "monospace",
-                    fontSize: 11,
-                    fontWeight: 800,
-                    letterSpacing: "0.08em",
-                    color: t.dangerText,
-                    backgroundColor: t.dangerBg,
-                    padding: "3px 8px",
-                    borderRadius: 4,
-                    border: `1px solid ${t.danger}`,
-                  }}
-                >
-                  +185% OVER PREVIOUS RECORD
-                </span>
+                />
               </div>
               <div
                 style={{
-                  width: 160,
-                  height: 250 * bar3Grow,
-                  borderRadius: "12px 12px 0 0",
-                  background: isCream
-                    ? "linear-gradient(to top, #991B1B, #DC2626)"
-                    : "linear-gradient(to top, #BE123C, #F43F5E)",
-                  border: `2.5px solid ${isCream ? "#EF4444" : "#FDA4AF"}`,
-                  boxShadow: isCream
-                    ? "0 15px 35px rgba(220, 38, 38, 0.3)"
-                    : "0 0 45px rgba(244, 63, 94, 0.7)",
+                  width: '100%',
+                  height: archegosH,
+                  background: 'linear-gradient(to top, #DC2626, #EF4444)',
+                  borderRadius: '8px 8px 0 0',
+                  boxShadow: '0 0 30px rgba(220, 38, 38, 0.45)',
+                  border: '1.5px solid rgba(255, 255, 255, 0.3)',
                 }}
               />
-              <div style={{ textAlign: "center" }}>
-                <span style={{ fontFamily: "Georgia, serif", fontSize: 18, fontWeight: 900, color: t.text, display: "block" }}>
-                  Archegos / Bill Hwang
+              <div style={{ textAlign: 'center', marginTop: 4 }}>
+                <span style={{ fontFamily: 'Georgia, serif', fontWeight: 900, fontSize: 16, color: t.danger, display: 'block' }}>
+                  Archegos Capital
                 </span>
-                <span style={{ fontFamily: "monospace", fontSize: 13, color: t.danger, fontWeight: 800 }}>
-                  March 2021 (Single Fund)
+                <span style={{ fontFamily: 'monospace', fontSize: 12, fontWeight: 700, color: t.textMuted }}>
+                  Bill Hwang • March 2021
                 </span>
               </div>
             </div>
           </div>
+        </GlassCard>
+
+        {/* Law 10: 4-Second Attention Reset Banner at Frame 90 */}
+        <div
+          style={{
+            marginTop: 18,
+            opacity: resetOpacity,
+            transform: `translateY(${resetTranslateY}px)`,
+          }}
+        >
+          <HighlightPill
+            delay={90}
+            color="rgba(220, 38, 38, 0.16)"
+            borderColor={t.danger}
+            textColor={t.danger}
+          >
+            RECORD EXTENSION: EXCEEDS BARINGS AND SOCIÉTÉ GÉNÉRALE LOSSES COMBINED BY 2.4X
+          </HighlightPill>
         </div>
-      </Camera3D>
-    </AbsoluteFill>
+      </AbsoluteFill>
+    </CinematicCanvas>
   );
 };

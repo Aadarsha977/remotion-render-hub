@@ -1,269 +1,330 @@
-import React from "react";
-import { AbsoluteFill, useCurrentFrame, useVideoConfig } from "remotion";
-import { GridBackground } from "../components/motion/GridBackground";
-import { Camera3D } from "../components/motion/Camera3D";
-import { PaperTexture } from "../components/motion/PaperTexture";
-import { ArchivalStamp } from "../components/motion/ArchivalStamp";
-import { MotionArrow } from "../components/motion/MotionArrow";
-import { ThemeMode, THEMES, SceneProps } from "../theme/theme";
+import React from 'react';
+import {
+  AbsoluteFill,
+  interpolate,
+  spring,
+  useCurrentFrame,
+  useVideoConfig,
+} from 'remotion';
+import {
+  CinematicCanvas,
+  KineticGrid,
+  MaskedReveal,
+  GlassCard,
+  DynamicCounter,
+  ProgressRing,
+  ShockwaveCircle,
+  HighlightPill,
+  ArchivalStamp,
+} from '../components/motion';
+import { SceneProps, THEMES } from '../theme/theme';
 
 export const Scene1_ColdMorning: React.FC<SceneProps> = ({
-  theme = "cream",
+  theme = 'cream',
 }) => {
   const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
+  const { fps, durationInFrames } = useVideoConfig();
+  const isCream = theme === 'cream';
   const t = THEMES[theme] || THEMES.cream;
-  const isCream = theme === "cream";
+
+  // Law 10: 4-Second Attention Reset Event at Frame 90
+  const resetSpring = spring({
+    frame: frame - 90,
+    fps,
+    config: { damping: 13, stiffness: 120, mass: 0.5 },
+  });
+
+  const resetOpacity = interpolate(resetSpring, [0, 1], [0, 1], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+  });
+
+  const resetTranslateY = interpolate(resetSpring, [0, 1], [15, 0], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+  });
 
   return (
-    <AbsoluteFill>
-      <GridBackground theme={theme} mood="default" />
-      <PaperTexture theme={theme} opacity={0.4} />
+    <CinematicCanvas
+      durationInFrames={durationInFrames}
+      cameraDriftScale={1.045}
+      baseColor={isCream ? '#F4EFEA' : '#140F0D'}
+      gradientColors={{
+        primary: isCream ? 'rgba(194, 139, 56, 0.18)' : 'rgba(212, 175, 55, 0.15)',
+        secondary: isCream ? 'rgba(192, 57, 43, 0.12)' : 'rgba(231, 76, 60, 0.12)',
+        tertiary: isCream ? 'rgba(44, 62, 80, 0.08)' : 'rgba(26, 20, 18, 0.4)',
+      }}
+      grainOpacity={0.05}
+      enableVignette={true}
+    >
+      {/* Law 4 & 5: Kinetic Cartesian Grid, Framing Brackets, and Coordinate Crosshairs */}
+      <KineticGrid
+        entryFrame={4}
+        cornerLabel="MANHATTAN DISPATCH // SEC-VOL-2021"
+        bracketColor={isCream ? 'rgba(26, 22, 21, 0.35)' : 'rgba(229, 192, 123, 0.35)'}
+        dotColor={isCream ? 'rgba(26, 22, 21, 0.07)' : 'rgba(255, 255, 255, 0.05)'}
+      />
 
-      {/* 3D Virtual Camera with continuous push-in momentum */}
-      <Camera3D
-        durationInFrames={135}
-        zoomFrom={1.0}
-        zoomTo={1.12}
-        panXFrom={0}
-        panXTo={-25}
-        panYFrom={0}
-        panYTo={15}
-        tiltX={4}
-        tiltY={-3}
+      {/* Law 5: Expanding Shockwave Ripple when the Case Stamp Slams at Frame 38 */}
+      <ShockwaveCircle
+        startFrame={36}
+        duration={26}
+        size={420}
+        color={t.danger}
+        strokeWidth={3}
+      />
+
+      {/* Primary Center Layout */}
+      <AbsoluteFill
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '0 80px',
+        }}
       >
-        {/* Full Screen Archival Broadsheet Newspaper Container */}
-        <div
+        {/* Law 3 & 5: Staggered Status Highlight Pill */}
+        <div style={{ marginBottom: 14 }}>
+          <HighlightPill
+            delay={8}
+            color={isCream ? 'rgba(194, 139, 56, 0.15)' : 'rgba(212, 175, 55, 0.15)'}
+            borderColor={isCream ? 'rgba(194, 139, 56, 0.45)' : 'rgba(212, 175, 55, 0.45)'}
+            textColor={isCream ? '#92400E' : '#E5C07B'}
+          >
+            THE WALL STREET CHRONICLE • ESTABLISHED 1889
+          </HighlightPill>
+        </div>
+
+        {/* Law 6: Masked Kinetic Typography with Tracking Deceleration */}
+        <div style={{ marginBottom: 28, maxWidth: 1200 }}>
+          <MaskedReveal
+            text="ON A COLD FRIDAY MORNING IN MARCH 2021"
+            delay={12}
+            staggerFrames={3}
+            style={{
+              fontSize: 52,
+              fontWeight: 900,
+              color: t.text,
+              fontFamily: "Georgia, 'Times New Roman', serif",
+              lineHeight: 1.1,
+              textTransform: 'uppercase',
+            }}
+            accentIndices={[2, 3]}
+            accentStyle={{ color: t.danger }}
+          />
+        </div>
+
+        {/* Law 7 & 9: 3D Frosted Editorial GlassCard with Specular Sheen Sweep */}
+        <GlassCard
+          delay={20}
+          sheenDelay={45}
+          glowColor={isCream ? 'rgba(194, 139, 56, 0.2)' : 'rgba(212, 175, 55, 0.2)'}
+          tiltAngle={6}
           style={{
-            position: "absolute",
-            top: 40,
-            left: "50%",
-            transform: "translateX(-50%)",
-            width: 1400,
-            height: 920,
-            backgroundColor: isCream ? "#FFFFFF" : "#1E1613",
-            border: `2px solid ${t.border}`,
-            borderRadius: 8,
+            padding: '36px 48px',
+            minWidth: 1050,
+            backgroundColor: isCream ? 'rgba(255, 255, 255, 0.88)' : 'rgba(30, 22, 19, 0.88)',
+            border: `1.5px solid ${t.border}`,
             boxShadow: isCream
-              ? "0 25px 60px -15px rgba(44, 30, 20, 0.15), 0 0 1px rgba(0,0,0,0.2)"
-              : "0 30px 70px -15px rgba(0, 0, 0, 0.9)",
-            padding: "36px 48px",
-            display: "flex",
-            flexDirection: "column",
-            gap: 20,
+              ? '0 25px 60px -15px rgba(44, 30, 20, 0.15), 0 0 1px rgba(0,0,0,0.2)'
+              : '0 30px 70px -15px rgba(0, 0, 0, 0.9)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 24,
           }}
         >
-          {/* Newspaper Masthead */}
+          {/* Top Subheader Line */}
           <div
             style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              borderBottom: `3px double ${t.text}`,
-              paddingBottom: 16,
-              gap: 8,
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              borderBottom: `2px solid ${t.border}`,
+              paddingBottom: 14,
             }}
           >
-            <div
+            <span
               style={{
-                width: "100%",
-                display: "flex",
-                justifyContent: "space-between",
-                fontFamily: "monospace",
-                fontSize: 12,
-                fontWeight: 700,
-                color: t.textMuted,
-                letterSpacing: "0.1em",
-                textTransform: "uppercase",
-              }}
-            >
-              <span>MANHATTAN EDITION • SPECIAL INVESTIGATION</span>
-              <span>ESTABLISHED 1889</span>
-              <span>PRICE: $4.00</span>
-            </div>
-
-            <h1
-              style={{
-                fontFamily: "Georgia, 'Times New Roman', serif",
-                fontSize: 68,
-                fontWeight: 900,
-                letterSpacing: "0.04em",
-                color: t.text,
-                margin: 0,
-                textTransform: "uppercase",
-                textAlign: "center",
-                lineHeight: 1,
-              }}
-            >
-              The Wall Street Chronicle
-            </h1>
-
-            {/* Dateline Bar */}
-            <div
-              style={{
-                width: "100%",
-                borderTop: `1px solid ${t.border}`,
-                borderBottom: `1px solid ${t.border}`,
-                padding: "6px 0",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                fontFamily: "monospace",
+                fontFamily: 'monospace',
                 fontSize: 13,
                 fontWeight: 800,
-                color: t.text,
-                letterSpacing: "0.08em",
+                color: t.accent,
+                letterSpacing: '0.12em',
+                textTransform: 'uppercase',
               }}
             >
-              <span style={{ color: t.accent }}>VOL. CCXXXVIII NO. 61</span>
-              <span
-                style={{
-                  fontSize: 16,
-                  fontWeight: 900,
-                  letterSpacing: "0.15em",
-                  color: isCream ? "#111827" : "#F5EBE1",
-                  background: isCream ? "#FEF3C7" : "rgba(229, 192, 123, 0.15)",
-                  padding: "4px 16px",
-                  borderRadius: 4,
-                  border: `1px solid ${t.borderAccent}`,
-                }}
-              >
-                FRIDAY • MARCH 26, 2021
-              </span>
-              <span>MIDTOWN NEW YORK • 07:00 AM EST</span>
-            </div>
-          </div>
-
-          {/* Main Hero Headline */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-            <h2
+              VOL. CCXXXVIII NO. 61 • PRE-MARKET INVESTIGATION
+            </span>
+            <span
               style={{
-                fontFamily: "Georgia, 'Times New Roman', serif",
-                fontSize: 54,
+                fontFamily: 'monospace',
+                fontSize: 13,
                 fontWeight: 900,
-                lineHeight: 1.05,
-                color: t.text,
-                letterSpacing: "-0.02em",
-                margin: 0,
-                textTransform: "uppercase",
+                color: isCream ? '#92400E' : '#E5C07B',
+                background: isCream ? 'rgba(194, 139, 56, 0.12)' : 'rgba(229, 192, 123, 0.15)',
+                padding: '4px 14px',
+                borderRadius: 4,
+                border: `1px solid ${t.borderAccent}`,
+                letterSpacing: '0.08em',
               }}
             >
-              A COLD FRIDAY MORNING IN MARCH:
-              <br />
-              <span style={{ color: t.danger }}>THE $20,000,000,000 COLLAPSE BEGINS</span>
-            </h2>
-
-            <p
-              style={{
-                fontFamily: "Georgia, serif",
-                fontSize: 20,
-                lineHeight: 1.45,
-                color: t.textMuted,
-                maxWidth: "85%",
-                margin: 0,
-                fontStyle: "italic",
-              }}
-            >
-              Before market open on March 26, unprecedented margin calls struck prime brokers
-              across Manhattan, triggering the fastest single-firm liquidation in modern financial history.
-            </p>
+              MIDTOWN NEW YORK
+            </span>
           </div>
 
-          {/* Broadsheet Multi-Column Layout */}
+          {/* Three Forensic Telemetry Data Columns */}
           <div
             style={{
-              display: "grid",
-              gridTemplateColumns: "1.2fr 1fr 1fr",
-              gap: 28,
-              borderTop: `1px solid ${t.border}`,
-              paddingTop: 18,
-              flex: 1,
+              display: 'grid',
+              gridTemplateColumns: '1.2fr 1.2fr 1fr',
+              gap: 32,
+              alignItems: 'center',
             }}
           >
-            {/* Column 1: Lead Story & Time HUD */}
-            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            {/* Column 1: Live Pre-Market Clock & Telemetry Odometer */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
               <span
                 style={{
-                  fontFamily: "monospace",
+                  fontFamily: 'monospace',
                   fontSize: 12,
                   fontWeight: 800,
-                  color: t.accent,
-                  letterSpacing: "0.1em",
+                  color: t.textMuted,
+                  letterSpacing: '0.1em',
+                  textTransform: 'uppercase',
                 }}
               >
-                PRE-MARKET DISPATCH
+                UNWIND WINDOW OPENS
               </span>
-              <p
-                style={{
-                  fontFamily: "Georgia, serif",
-                  fontSize: 14,
-                  lineHeight: 1.6,
-                  color: t.text,
-                  margin: 0,
-                  textAlign: "justify",
-                }}
-              >
-                At dawn in Midtown Manhattan, global investment banks scrambled to tally exposure to a secretive
-                family office. With temperature lingering at -2°C, the opening bell at 09:30 AM loomed
-                as the deadline for emergency margin deposits that would never arrive.
-              </p>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
+                <span
+                  style={{
+                    fontFamily: 'monospace',
+                    fontSize: 48,
+                    fontWeight: 900,
+                    color: t.text,
+                    lineHeight: 1,
+                  }}
+                >
+                  07:
+                </span>
+                <DynamicCounter
+                  startValue={0}
+                  endValue={0}
+                  delay={24}
+                  prefix="0"
+                  suffix=" AM"
+                  style={{
+                    fontFamily: 'monospace',
+                    fontSize: 48,
+                    fontWeight: 900,
+                    color: t.text,
+                    lineHeight: 1,
+                  }}
+                />
+              </div>
+              <span style={{ fontSize: 13, color: t.textMuted, fontFamily: 'Georgia, serif', fontStyle: 'italic' }}>
+                NYSE Bell in 150 minutes
+              </span>
             </div>
 
-            {/* Column 2: Meteorological & Market Indicator */}
+            {/* Column 2: Meteorological Gauge & Dynamic Counter */}
             <div
               style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: 12,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 16,
                 borderLeft: `1px solid ${t.border}`,
-                paddingLeft: 20,
+                paddingLeft: 24,
               }}
             >
-              <span style={{ fontFamily: "monospace", fontSize: 12, fontWeight: 800, color: t.textMuted }}>
-                CONDITIONS AT DAWN
-              </span>
-              <div
-                style={{
-                  padding: "12px 16px",
-                  borderRadius: 6,
-                  backgroundColor: isCream ? "#F9F7F4" : "#281E19",
-                  border: `1px solid ${t.border}`,
-                }}
-              >
-                <span style={{ fontFamily: "monospace", fontSize: 26, fontWeight: 900, color: t.gold }}>
-                  -2°C / 28°F
+              <ProgressRing
+                percentage={85}
+                radius={36}
+                strokeWidth={5}
+                delay={26}
+                strokeColor={t.gold}
+                trackColor={isCream ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.08)'}
+              />
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <span
+                  style={{
+                    fontFamily: 'monospace',
+                    fontSize: 11,
+                    fontWeight: 800,
+                    color: t.textMuted,
+                    letterSpacing: '0.08em',
+                    textTransform: 'uppercase',
+                  }}
+                >
+                  DAWN TEMPERATURE
                 </span>
-                <span style={{ fontFamily: "system-ui", fontSize: 12, color: t.textMuted, display: "block", marginTop: 4 }}>
-                  FREEZING WINDS OVER WALL ST
+                <div style={{ display: 'flex', alignItems: 'baseline' }}>
+                  <DynamicCounter
+                    startValue={5}
+                    endValue={-2}
+                    delay={28}
+                    suffix="°C"
+                    style={{
+                      fontFamily: 'monospace',
+                      fontSize: 34,
+                      fontWeight: 900,
+                      color: t.gold,
+                      lineHeight: 1.1,
+                    }}
+                  />
+                  <span style={{ fontFamily: 'monospace', fontSize: 16, color: t.textMuted, marginLeft: 6 }}>
+                    / 28°F
+                  </span>
+                </div>
+                <span style={{ fontSize: 12, color: t.textMuted, marginTop: 2 }}>
+                  Sub-zero freezing winds
                 </span>
               </div>
             </div>
 
-            {/* Column 3: Red Stamp & Archival Docket */}
+            {/* Column 3: The Tactile Red Case Stamp */}
             <div
               style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
                 borderLeft: `1px solid ${t.border}`,
-                paddingLeft: 20,
-                position: "relative",
+                paddingLeft: 24,
               }}
             >
               <ArchivalStamp
                 text="MARCH 26, 2021"
-                subtext="OFFICIAL CASE FILE 001"
-                delay={20}
-                rotation={-8}
+                subtext="CASE FILE: ARCHEGOS"
+                delay={36}
+                rotation={-9}
                 color={t.danger}
                 borderColor={t.danger}
-                size={22}
+                size={18}
               />
             </div>
           </div>
+        </GlassCard>
+
+        {/* Law 10: 4-Second Attention Reset Banner at Frame 90 */}
+        <div
+          style={{
+            marginTop: 22,
+            opacity: resetOpacity,
+            transform: `translateY(${resetTranslateY}px)`,
+          }}
+        >
+          <HighlightPill
+            delay={90}
+            color={isCream ? 'rgba(220, 38, 38, 0.12)' : 'rgba(244, 63, 94, 0.16)'}
+            borderColor={t.danger}
+            textColor={t.danger}
+          >
+            ⚠️ 07:15 AM EST: UNUSUAL BLOCK LIQUIDATION ORDERS DISPATCHED TO PRIME BROKERS
+          </HighlightPill>
         </div>
-      </Camera3D>
-    </AbsoluteFill>
+      </AbsoluteFill>
+    </CinematicCanvas>
   );
 };
