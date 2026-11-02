@@ -5,61 +5,82 @@ interface StorefrontBuildingProps {
   y?: number;
 }
 
-export const StorefrontBuilding: React.FC<StorefrontBuildingProps> = ({ x = 0, y = 0 }) => {
-  const ink = '#3D312A';
+/**
+ * Authentic Department Store Facade (Shot 8 / 0:52 - 0:55).
+ * Modeled on frame_053.png of Little Bit Better (hhUn8kmTfO0).
+ * Features:
+ * - Terracotta pediment roof with cream roofline eaves
+ * - Bold white architectural frieze bands
+ * - Glass entrance doors with teal glass panels and brown mullions
+ * - Perspective trapezoidal walkway leading to the entrance doors
+ */
+export const StorefrontBuilding: React.FC<StorefrontBuildingProps> = () => {
+  const terracottaColor = '#B87569';
+  const bandColor = '#F2ECE1';
+  const glassColor = '#6EA89E';
+  const trimColor = '#3D312A';
 
   return (
-    <div
-      style={{
-        position: 'absolute',
-        left: x,
-        top: y,
-        width: 1920,
-        height: 1080,
-        backgroundColor: '#BEA78F',
-        pointerEvents: 'none',
-      }}
-    >
+    <div style={{ position: 'absolute', width: '100%', height: '100%', overflow: 'hidden' }}>
       <svg width="1920" height="1080" viewBox="0 0 1920 1080" fill="none">
-        {/* Background Skyline */}
-        <rect x="0" y="240" width="220" height="500" fill="#AA927B" />
-        <rect x="1700" y="240" width="220" height="500" fill="#AA927B" />
+        {/* Background Sky */}
+        <rect x="0" y="0" width="1920" height="1080" fill="#B8A18C" />
 
-        {/* Store Center Complex (x = 320 to 1600) */}
-        <g transform="translate(320, 160)">
-          {/* Main Gable Roof Peak */}
-          <polygon points="640,60 120,180 1160,180" fill="#C07A70" stroke={ink} strokeWidth="6" />
-          {/* White Eave Molding */}
-          <polygon points="640,40 80,180 120,200 640,75 1160,200 1200,180" fill="#F5ECE5" stroke={ink} strokeWidth="5" />
+        {/* Distant Background Silhouette Buildings */}
+        <rect x="0" y="90" width="220" height="650" fill="#786756" />
+        <rect x="1700" y="90" width="220" height="650" fill="#786756" />
 
-          {/* Center Main Building Block */}
-          <rect x="180" y="200" width="920" height="540" fill="#C07A70" stroke={ink} strokeWidth="6" />
+        {/* =========================================================================
+            STOREFRONT MAIN STRUCTURE (CENTERED SYMMETRICAL)
+        ========================================================================= */}
+        {/* Left Wing */}
+        <rect x="90" y="260" width="340" height="500" fill={terracottaColor} />
+        <rect x="90" y="260" width="340" height="60" fill={bandColor} stroke={trimColor} strokeWidth="3" />
+        <rect x="90" y="440" width="340" height="60" fill={bandColor} stroke={trimColor} strokeWidth="3" />
 
-          {/* Left Wing */}
-          <rect x="0" y="280" width="180" height="460" fill="#B06A60" stroke={ink} strokeWidth="5" />
-          <rect x="0" y="280" width="180" height="60" fill="#F5ECE5" stroke={ink} strokeWidth="4" />
+        {/* Right Wing */}
+        <rect x="1490" y="260" width="340" height="500" fill={terracottaColor} />
+        <rect x="1490" y="260" width="340" height="60" fill={bandColor} stroke={trimColor} strokeWidth="3" />
+        <rect x="1490" y="440" width="340" height="60" fill={bandColor} stroke={trimColor} strokeWidth="3" />
+        {/* Side Service Door */}
+        <rect x="1530" y="580" width="90" height="180" fill="#70433C" stroke={trimColor} strokeWidth="4" />
 
-          {/* Right Wing */}
-          <rect x="1100" y="280" width="180" height="460" fill="#B06A60" stroke={ink} strokeWidth="5" />
-          <rect x="1100" y="280" width="180" height="60" fill="#F5ECE5" stroke={ink} strokeWidth="4" />
+        {/* Center Main Building Mass */}
+        <polygon points="360,280 960,150 1560,280 1560,760 360,760" fill={terracottaColor} />
 
-          {/* Center Entrance Signboard Band */}
-          <rect x="170" y="380" width="940" height="75" fill="#F5ECE5" stroke={ink} strokeWidth="5" />
+        {/* Pediment Triangular Roof Eaves (Cream Architrave) */}
+        <polygon points="340,285 960,140 1580,285 1560,315 960,175 360,315" fill={bandColor} stroke={trimColor} strokeWidth="4" />
 
-          {/* Glass Double-Door Entryway (x = 520, y = 500) */}
-          <g transform="translate(480, 500)">
-            <rect x="0" y="0" width="320" height="240" fill="#5E9898" stroke={ink} strokeWidth="6" />
-            {/* Door Center Frame */}
-            <line x1="160" y1="0" x2="160" y2="240" stroke={ink} strokeWidth="5" />
-            <line x1="80" y1="0" x2="80" y2="240" stroke={ink} strokeWidth="4" />
-            <line x1="240" y1="0" x2="240" y2="240" stroke={ink} strokeWidth="4" />
-            <line x1="0" y1="80" x2="320" y2="80" stroke={ink} strokeWidth="4" />
-          </g>
-        </g>
+        {/* Center Horizontal Overhang Awning */}
+        <polygon points="380,400 1540,400 1510,470 410,470" fill={bandColor} stroke={trimColor} strokeWidth="5" />
+        <polygon points="410,470 1510,470 1480,510 440,510" fill="#CBB7A2" stroke={trimColor} strokeWidth="3" />
 
-        {/* Store Entrance Plaza Ground (y = 860) */}
-        <polygon points="580,860 1340,860 1560,1080 360,1080" fill="#AA927B" stroke={ink} strokeWidth="4" />
-        <rect x="0" y="860" width="1920" height="220" fill="#A08873" opacity="0.6" />
+        {/* Center Glass Entrance Doors (x = 760 to 1160, y = 530 to 760) */}
+        <rect x="760" y="530" width="400" height="230" fill="#3D312A" />
+
+        {/* 4 Teal Glass Panes */}
+        {/* Top Transom Panes */}
+        <rect x="770" y="540" width="100" height="60" fill={glassColor} stroke={trimColor} strokeWidth="3" />
+        <rect x="880" y="540" width="75" height="60" fill={glassColor} stroke={trimColor} strokeWidth="3" />
+        <rect x="965" y="540" width="75" height="60" fill={glassColor} stroke={trimColor} strokeWidth="3" />
+        <rect x="1050" y="540" width="100" height="60" fill={glassColor} stroke={trimColor} strokeWidth="3" />
+
+        {/* Main Double Doors Glass */}
+        <rect x="770" y="610" width="90" height="150" fill={glassColor} stroke={trimColor} strokeWidth="3" />
+        <rect x="870" y="610" width="90" height="150" fill="#794841" stroke={trimColor} strokeWidth="4" />
+        <rect x="960" y="610" width="90" height="150" fill="#794841" stroke={trimColor} strokeWidth="4" />
+        <rect x="1060" y="610" width="90" height="150" fill={glassColor} stroke={trimColor} strokeWidth="3" />
+        {/* Door Handles */}
+        <line x1="945" y1="670" x2="945" y2="710" stroke="#F2ECE1" strokeWidth="5" strokeLinecap="round" />
+        <line x1="975" y1="670" x2="975" y2="710" stroke="#F2ECE1" strokeWidth="5" strokeLinecap="round" />
+
+        {/* =========================================================================
+            PERSPECTIVE WALKWAY & PAVEMENT
+        ========================================================================= */}
+        {/* Main Pavement */}
+        <rect x="0" y="760" width="1920" height="320" fill="#998774" stroke={trimColor} strokeWidth="5" />
+        {/* Perspective Trapezoidal Walkway leading to the entrance */}
+        <polygon points="760,760 1160,760 1440,940 480,940" fill="#786756" stroke={trimColor} strokeWidth="4" />
       </svg>
     </div>
   );
