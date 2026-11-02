@@ -9,6 +9,7 @@ import { Scene001Master } from "./archegos/Scene001Master";
 import { Scene002Master } from "./archegos/Scene002Master";
 import { Act1MasterSequence } from "./archegos/Act1MasterSequence";
 import { DanielVsMichaelScene } from "./little_bit_better/compositions/DanielVsMichaelScene";
+import { OwningAssetsParableScene } from "./little_bit_better/compositions/OwningAssetsParableScene";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -172,6 +173,18 @@ export const RemotionRoot: React.FC = () => {
       <Composition
         id="DanielVsMichael"
         component={DanielVsMichaelScene}
+        durationInFrames={900}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+
+      {/* ========================================================
+          Little Bit Better - Money Isn't Earned by Working Hard (hhUn8kmTfO0)
+         ======================================================== */}
+      <Composition
+        id="OwningAssetsParable"
+        component={OwningAssetsParableScene}
         durationInFrames={900}
         fps={30}
         width={1920}
