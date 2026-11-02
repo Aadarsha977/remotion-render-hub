@@ -10,6 +10,7 @@ import { Scene002Master } from "./archegos/Scene002Master";
 import { Act1MasterSequence } from "./archegos/Act1MasterSequence";
 import { DanielVsMichaelScene } from "./little_bit_better/compositions/DanielVsMichaelScene";
 import { OwningAssetsParableScene } from "./little_bit_better/compositions/OwningAssetsParableScene";
+import { HowToInventMoneyScene } from "./little_bit_better/compositions/HowToInventMoneyScene";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -186,6 +187,18 @@ export const RemotionRoot: React.FC = () => {
         id="OwningAssetsParable"
         component={OwningAssetsParableScene}
         durationInFrames={900}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+
+      {/* ========================================================
+          Little Bit Better - How to Invent Money 65s Exact 1:1 Clone
+         ======================================================== */}
+      <Composition
+        id="HowToInventMoney"
+        component={HowToInventMoneyScene}
+        durationInFrames={1950}
         fps={30}
         width={1920}
         height={1080}

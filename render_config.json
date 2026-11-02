@@ -1,8 +1,8 @@
 {
-    "composition":  "OwningAssetsParable",
+    "composition":  "HowToInventMoney",
     "mode":  "all",
     "fps":  30,
-    "durationInFrames":  900,
+    "durationInFrames":  1950,
     "storyboardIntervalFrames":  60,
     "accelerator":  "gpu_t4_x2",
     "imageFormat":  "jpeg",
