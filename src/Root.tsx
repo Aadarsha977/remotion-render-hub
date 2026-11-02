@@ -8,6 +8,7 @@ import { THEMES } from "./theme/theme";
 import { Scene001Master } from "./archegos/Scene001Master";
 import { Scene002Master } from "./archegos/Scene002Master";
 import { Act1MasterSequence } from "./archegos/Act1MasterSequence";
+import { DanielVsMichaelScene } from "./little_bit_better/compositions/DanielVsMichaelScene";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -163,6 +164,18 @@ export const RemotionRoot: React.FC = () => {
         width={1920}
         height={1080}
         defaultProps={{ transparentBackground: false }}
+      />
+
+      {/* ========================================================
+          Little Bit Better - Daniel vs Michael 30s Benchmark
+         ======================================================== */}
+      <Composition
+        id="DanielVsMichael"
+        component={DanielVsMichaelScene}
+        durationInFrames={900}
+        fps={30}
+        width={1920}
+        height={1080}
       />
     </>
   );

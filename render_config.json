@@ -1,8 +1,8 @@
 {
-    "composition":  "Archegos-Act1-Master",
+    "composition":  "DanielVsMichael",
     "mode":  "all",
     "fps":  30,
-    "durationInFrames":  1955,
+    "durationInFrames":  900,
     "storyboardIntervalFrames":  60,
     "accelerator":  "gpu_t4_x2",
     "imageFormat":  "jpeg",
