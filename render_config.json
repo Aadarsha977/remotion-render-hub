@@ -1,9 +1,9 @@
 {
-    "composition":  "HowToInventMoney",
+    "composition":  "AndroidHomeScreen",
     "mode":  "all",
     "fps":  30,
-    "durationInFrames":  1950,
-    "storyboardIntervalFrames":  60,
+    "durationInFrames":  300,
+    "storyboardIntervalFrames":  30,
     "accelerator":  "gpu_t4_x2",
     "imageFormat":  "jpeg",
     "jpegQuality":  85

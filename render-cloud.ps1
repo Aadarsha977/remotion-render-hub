@@ -1,4 +1,4 @@
-﻿param (
+param (
     [switch]$StoryboardOnly,
     [switch]$VideoOnly,
     [string]$KernelSlug = "techidea/remotion-cloud-video-renderer",
@@ -98,6 +98,6 @@ if (Test-Path $videoFile) {
 if (Test-Path $storyboardFile) {
     Write-Host " [STORYBOARD] Storyboard Viewer: $storyboardFile" -ForegroundColor White
     Write-Host "--> Launching Storyboard Viewer in your browser..." -ForegroundColor Yellow
-    try { Start-Process  } catch {}$storyboardFile
+    try { Start-Process $storyboardFile } catch {}
 }
 Write-Host "=======================================================" -ForegroundColor Green

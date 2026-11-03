@@ -11,6 +11,8 @@ import { Act1MasterSequence } from "./archegos/Act1MasterSequence";
 import { DanielVsMichaelScene } from "./little_bit_better/compositions/DanielVsMichaelScene";
 import { OwningAssetsParableScene } from "./little_bit_better/compositions/OwningAssetsParableScene";
 import { HowToInventMoneyScene } from "./little_bit_better/compositions/HowToInventMoneyScene";
+import { AndroidHomeScreen } from "./compositions/AndroidHomeScreen";
+import { AndroidPhoneShowcase } from "./compositions/AndroidPhoneShowcase";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -199,6 +201,30 @@ export const RemotionRoot: React.FC = () => {
         id="HowToInventMoney"
         component={HowToInventMoneyScene}
         durationInFrames={1950}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+
+      {/* ========================================================
+          Android 15 Flagship Mobile Phone - Native 9:16 Home Screen
+         ======================================================== */}
+      <Composition
+        id="AndroidHomeScreen"
+        component={AndroidHomeScreen}
+        durationInFrames={300}
+        fps={30}
+        width={1080}
+        height={1920}
+      />
+
+      {/* ========================================================
+          Android 15 Flagship Mobile Phone - 3D Device Showcase (16:9)
+         ======================================================== */}
+      <Composition
+        id="AndroidPhoneShowcase"
+        component={AndroidPhoneShowcase}
+        durationInFrames={300}
         fps={30}
         width={1920}
         height={1080}
